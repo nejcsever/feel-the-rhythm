@@ -1,0 +1,21 @@
+
+mainmenu.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+play-down
+  rotate: false
+  xy: 0, 0
+  size: 18, 18
+  split: 4, 4, 4, 4
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
+play-up
+  rotate: false
+  xy: 18, 0
+  size: 18, 18
+  split: 3, 3, 4, 4
+  orig: 18, 18
+  offset: 0, 0
+  index: -1
