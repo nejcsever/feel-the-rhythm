@@ -5,15 +5,16 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.sever.ftr.FTRGame;
 
 public class MainMenu implements Screen {
@@ -23,13 +24,13 @@ public class MainMenu implements Screen {
 	
 	private Stage stage;
 	private Table table;
-	private TextButton playButton, settingsButton;
 	private Label title;
 	private Skin skin;
-	private BitmapFont permanentMarkerFont;
+	private BitmapFont openSansCondensed;
 	private TextureAtlas atlas;
+	private ImageButton playButton, settingsButton;
 	
-	private static final int WIDTH = 300;
+	private static final int WIDTH = 1000;
 	
 	public MainMenu(FTRGame game) {
 		this.game = game;
@@ -40,31 +41,38 @@ public class MainMenu implements Screen {
         camera.position.set(WIDTH*aspectRatio / 2, WIDTH / 2, 0);
 		
 		/* Loading assets */
-		permanentMarkerFont = new BitmapFont(Gdx.files.internal("fonts/permanent-marker_46_white.fnt"), false);
-		
+        openSansCondensed = new BitmapFont(Gdx.files.internal("fonts/opensans-condensed_100_black.fnt"), false);
+        openSansCondensed.getRegion().getTexture().setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        openSansCondensed.setColor(Color.WHITE);
+        
 		atlas = new TextureAtlas(Gdx.files.internal("textures/mainmenu.pack"));
 		skin = new Skin(atlas);
-		TextButtonStyle playButtonStyle = new TextButtonStyle(skin.getDrawable("play-up"),skin.getDrawable("play-down"),skin.getDrawable("play-up"), permanentMarkerFont);
-		playButtonStyle.fontColor = Color.BLACK;
-		playButton = new TextButton("Play", playButtonStyle);
+		//TextButtonStyle playButtonStyle = new TextButtonStyle(skin.getDrawable("play-up"),skin.getDrawable("play-down"),skin.getDrawable("play-up"), openSansCondensed);
+		//playButtonStyle.fontColor = Color.BLACK;
+		//playButton = new TextButton("Play", playButtonStyle);
+		ImageButtonStyle playButtonStyle = new ImageButtonStyle(skin.getDrawable("play-button"),skin.getDrawable("play-button"),skin.getDrawable("play-button"),skin.getDrawable("play-button"),skin.getDrawable("play-button"),skin.getDrawable("play-button"));
+		playButton = new ImageButton(playButtonStyle);
+		ImageButtonStyle settingsStyle = new ImageButtonStyle(skin.getDrawable("settings-button"),skin.getDrawable("settings-button"),skin.getDrawable("settings-button"),skin.getDrawable("settings-button"),skin.getDrawable("settings-button"),skin.getDrawable("settings-button"));
+		settingsButton = new ImageButton(settingsStyle);
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 		
-		LabelStyle titleStyle = new LabelStyle(permanentMarkerFont, Color.WHITE);
+		LabelStyle titleStyle = new LabelStyle(openSansCondensed, Color.WHITE);
 		title = new Label("FEEL the RHYTHM", titleStyle);
 		table = new Table(skin);
-		table.add(title);
+		table.add(title).left().colspan(2);
 		table.row().padTop(30);
-		table.add(playButton);
+		table.add(settingsButton).center().right();
+		table.add(playButton).bottom().right();
 		table.setPosition(WIDTH/2, WIDTH*aspectRatio/2);
-		// TODO table.debug(); // remove
+		table.debug(); // TODO remove
 		stage.addActor(table);
 		
 	}
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+		Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		camera.update();
@@ -74,7 +82,7 @@ public class MainMenu implements Screen {
 		game.getBatch().begin();
 		stage.act();
 		stage.draw();
-		// TODO Table.drawDebug(stage); // TODO remove
+		//Table.drawDebug(stage); // TODO remove
 		game.getBatch().end();
 	}
 
