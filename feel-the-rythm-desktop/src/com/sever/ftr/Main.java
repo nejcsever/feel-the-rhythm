@@ -6,10 +6,10 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 public class Main {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-		cfg.title = "feel-the-rythm";
+		cfg.title = "Feel the Rhythm " + FTRGame.VERSION;
 		cfg.useGL20 = true;
-		cfg.width = 480;
-		cfg.height = 320;
+		cfg.width = 900;
+		cfg.height = 600;
 		
 		new LwjglApplication(new FTRGame(), cfg);
 	}

@@ -2,18 +2,16 @@ package com.sever.ftr;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.sever.ftr.screens.MainMenu;
 
 public class FTRGame extends Game {
-	private SpriteBatch batch;
-
 	/* List of game screens */
 	private Screen mainMenuScreen;
+	/* Game version */
+	public static final String VERSION = "0.0.1";
 	
 	@Override
 	public void create() {
-		batch = new SpriteBatch();
 		mainMenuScreen = new MainMenu(this);
 		this.setScreen(mainMenuScreen);
 	}
@@ -21,7 +19,6 @@ public class FTRGame extends Game {
 	@Override
 	public void dispose() {
 		super.dispose();
-		batch.dispose();
 	}
 
 	@Override
@@ -42,10 +39,5 @@ public class FTRGame extends Game {
 	@Override
 	public void resume() {
 		super.resume();
-	}
-	
-	/* Getters and setters */
-	public SpriteBatch getBatch() {
-		return batch;
 	}
 }
