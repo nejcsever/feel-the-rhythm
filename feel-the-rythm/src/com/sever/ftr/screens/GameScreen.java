@@ -25,6 +25,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+		game.playMidi("sound/marko_skace.mid", false);
 	}
 
 	@Override

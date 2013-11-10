@@ -99,13 +99,11 @@ public class MainMenu implements Screen {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				playButton.setDrawable(skin.getDrawable("play-button-down"));
 				buttonClick.play();
-				System.out.print("DOWN");
 				return super.touchDown(event, x, y, pointer, button);
 			}
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				super.touchUp(event, x, y, pointer, button);
 				playButton.setDrawable(skin.getDrawable("play-button"));
-				System.out.print("UP");
 			}
 	    });
 		Image settingsButton = new Image(skin.getDrawable("settings-button"));

@@ -2,13 +2,18 @@ package com.sever.ftr;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.sever.ftr.midi.MidiPlayer;
 import com.sever.ftr.screens.MainMenu;
 
 public class FTRGame extends Game {
 	/* List of game screens */
 	private Screen mainMenuScreen;
-	/* Game version */
-	public static final String VERSION = "0.0.1";
+	
+	private MidiPlayer midiPlayer;
+	
+	public FTRGame(MidiPlayer midiPlayer) {
+		this.midiPlayer = midiPlayer;
+	}
 	
 	@Override
 	public void create() {
@@ -33,11 +38,19 @@ public class FTRGame extends Game {
 
 	@Override
 	public void pause() {
+        midiPlayer.stop(); // TODO STOP PLAYING MIDI SOUND OR ANY SOUND! PAUSE EVERYTHING!
 		super.pause();
 	}
 
 	@Override
 	public void resume() {
 		super.resume();
+	}
+	
+	public void playMidi(String source, boolean looping) {
+		midiPlayer.setLooping(looping);
+        midiPlayer.setVolume(100f);
+        midiPlayer.open(source);
+        midiPlayer.play();
 	}
 }

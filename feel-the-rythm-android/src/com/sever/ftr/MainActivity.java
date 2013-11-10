@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.sever.ftr.midi.AndroidMidiPlayer;
 
 public class MainActivity extends AndroidApplication {
     @Override
@@ -12,7 +13,8 @@ public class MainActivity extends AndroidApplication {
         
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         cfg.useGL20 = true;
+        AndroidMidiPlayer midiPlayer = new AndroidMidiPlayer(getApplicationContext());
         
-        initialize(new FTRGame(), cfg);
+        initialize(new FTRGame(midiPlayer), cfg);
     }
 }
