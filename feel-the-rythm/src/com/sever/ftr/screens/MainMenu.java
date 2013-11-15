@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -34,8 +33,6 @@ public class MainMenu implements Screen {
 
 	private Stage stage;
 	private Table table;
-	
-	private OrthographicCamera cam;
 
 	public MainMenu(FTRGame game) {
 		this.game = game;
@@ -46,7 +43,6 @@ public class MainMenu implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		cam.update();
 		stage.act(delta);
 		batch.begin();
 		backgroundSprite.draw(batch);
@@ -58,12 +54,13 @@ public class MainMenu implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		stage.setViewport(width, height, true);
+		playButton.setWidth(playButton.getHeight());
+		System.out.println("HEIGHT: " + playButton.getHeight());
+		System.out.println("WIDTH: " + playButton.getWidth());
 	}
 
 	@Override
 	public void show() {
-		
-		cam = new OrthographicCamera(1024, 512);
 		
 		backgroundTex = new Texture("textures/background.png");
 		backgroundTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -86,9 +83,8 @@ public class MainMenu implements Screen {
 		logo.setScaling(Scaling.fillY);
 		table.add(logo).expand().fill().colspan(3);
 		table.row().padTop(-10).padBottom(50);
-		
 		playButton = new Image(skin.getDrawable("play-button"));
-		playButton.setScaling(Scaling.fill);
+		playButton.setScaling(Scaling.fillY);
 		buttonClick = Gdx.audio.newSound(Gdx.files.internal("sound/button-click.mp3"));
 		playButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
