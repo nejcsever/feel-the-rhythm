@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.sever.ftr.FTRGame;
-import com.sever.ftr.actors.MyWidget;
+import com.sever.ftr.actors.ResizableImage;
 
 public class GameScreen implements Screen {
 
@@ -61,7 +61,7 @@ public class GameScreen implements Screen {
 	public void resize(int width, int height) {
 		stage.setViewport(width, height, false);
 		for (Actor actor : wGroup.getChildren()) {
-			((MyWidget) actor).resize(width, height);
+			((ResizableImage) actor).resize(width, height);
 		}
 		playButton.setSize(Math.round(height*0.45), Math.round(height*0.45));
 		playButton.setPosition(Math.round(width*0.5) - playButton.getWidth()/2, Math.round(height*0.05));
@@ -76,13 +76,14 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+		/* Load background */
 		backgroundTex = new Texture("textures/background.png");
 		backgroundTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
 		backgroundSprite = new Sprite(backgroundTex);
 		backgroundSprite.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 
+		/* Load GUI */
 		atlas = new TextureAtlas(Gdx.files.internal("textures/mainmenu.pack"));
 		skin = new Skin(atlas);
 		
@@ -124,7 +125,7 @@ public class GameScreen implements Screen {
 				settingsButton.setDrawable(skin.getDrawable("settings-button"));
 			}
 	    });
-		MyWidget testButton = new MyWidget(skin.getDrawable("settings-button"), 0.5f, 0.5f, 0.3f);
+		ResizableImage testButton = new ResizableImage(skin.getDrawable("logo"), 0.5f, 1f, 0.5f, ResizableImage.TOP_CENTER);
 		testButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
@@ -167,7 +168,7 @@ public class GameScreen implements Screen {
 		
 		
 		// MIDI stuff
-		game.playMidi("sound/Vaja1.mid", false);
+		//game.playMidi("sound/Vaja1.mid", false);
 		/*MidiFile mf;
 		try {
 			mf = new MidiFile(Gdx.files.internal("sound/Vaja1.mid").read());
@@ -225,6 +226,11 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		skin.dispose();
+		backgroundTex.dispose();
+		batch.dispose();
+		stage.dispose();
+		atlas.dispose();
 	}
 
 }

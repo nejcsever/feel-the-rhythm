@@ -38,7 +38,7 @@ public class FTRGame extends Game {
 
 	@Override
 	public void pause() {
-        midiPlayer.stop(); // TODO STOP PLAYING MIDI SOUND OR ANY SOUND! PAUSE EVERYTHING!
+        // TODO STOP PLAYING MIDI SOUND OR ANY SOUND! PAUSE EVERYTHING!
 		super.pause();
 	}
 
