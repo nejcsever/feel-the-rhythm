@@ -2,37 +2,38 @@ package com.sever.ftr.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Scaling;
 import com.sever.ftr.FTRGame;
+import com.sever.ftr.actors.ResizableImage;
 
 public class MainMenu implements Screen {
 
 	private final FTRGame game;
-
-	private Texture backgroundTex;
-	private Sprite backgroundSprite;
-	private SpriteBatch batch;
-	private Image playButton;
-	private Sound buttonClick;
 	
+	private Stage stage;
+
+	private SpriteBatch batch;
+
 	private Skin skin;
+
 	private TextureAtlas atlas;
 
-	private Stage stage;
-	private Table table;
+	private Sprite backgroundSprite;
+
+	private Texture backgroundTex;
+	
+	private WidgetGroup widgetGroup;
 
 	public MainMenu(FTRGame game) {
 		this.game = game;
@@ -40,85 +41,103 @@ public class MainMenu implements Screen {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
 		stage.act(delta);
 		batch.begin();
 		backgroundSprite.draw(batch);
 		batch.end();
 		stage.draw();
-		Table.drawDebug(stage);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		stage.setViewport(width, height, true);
-		playButton.setWidth(playButton.getHeight());
-		System.out.println("HEIGHT: " + playButton.getHeight());
-		System.out.println("WIDTH: " + playButton.getWidth());
-	}
+		stage.setViewport(width, height, false);
+		for (Actor actor : widgetGroup.getChildren()) {
+			((ResizableImage) actor).resize(width, height);
+		}
+    }
+
 
 	@Override
 	public void show() {
-		
+		/* Load background */
 		backgroundTex = new Texture("textures/background.png");
 		backgroundTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
 		backgroundSprite = new Sprite(backgroundTex);
 		backgroundSprite.setBounds(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
 
+		/* Load GUI */
 		atlas = new TextureAtlas(Gdx.files.internal("textures/mainmenu.pack"));
 		skin = new Skin(atlas);
-		
 		batch = new SpriteBatch();
-
 		stage = new Stage();
+		
 		stage.setViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
 				false);
-		table = new Table();
-		table.top();
-		Image logo = new Image(skin.getDrawable("logo"));
-		logo.setScaling(Scaling.fillY);
-		table.add(logo).expand().fill().colspan(3);
-		table.row().padTop(-10).padBottom(50);
-		playButton = new Image(skin.getDrawable("play-button"));
-		playButton.setScaling(Scaling.fillY);
-		buttonClick = Gdx.audio.newSound(Gdx.files.internal("sound/button-click.mp3"));
+
+		ResizableImage logo = new ResizableImage(skin.getDrawable("logo"), 0.5f, 1f, 0.5f, ResizableImage.TOP_CENTER);
+		
+		final ResizableImage playButton = new ResizableImage(skin.getDrawable("play-button"), skin.getDrawable("play-button-down"), 0.5f, 0.05f, 0.45f, ResizableImage.BOTTOM_CENTER);
 		playButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
 				super.clicked(event, x, y);
-	            game.setScreen( new GameScreen(game));
+				game.switchScreen(FTRGame.GAME_SCREEN);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				playButton.setDrawable(skin.getDrawable("play-button-down"));
-				buttonClick.play();
+				System.out.println("PLAY BUTTON: " + x + ", " + y);
+				playButton.drawImageDown();
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				playButton.drawOriginalImage();
+				super.touchUp(event, x, y, pointer, button);
+			}
+	    });
+		
+		ResizableImage settingsButton = new ResizableImage(skin.getDrawable("settings-button"), 0.12f, 0.05f, 0.25f, ResizableImage.BOTTOM_LEFT);
+		settingsButton.addListener(new ClickListener() {
+			public void clicked (InputEvent event, float x, float y)
+	        {
+				super.clicked(event, x, y);
+	        }
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println("SETTINGS BUTTON: " + x + ", " + y);
 				return super.touchDown(event, x, y, pointer, button);
 			}
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				super.touchUp(event, x, y, pointer, button);
-				playButton.setDrawable(skin.getDrawable("play-button"));
 			}
 	    });
-		Image settingsButton = new Image(skin.getDrawable("settings-button"));
-		settingsButton.setScaling(Scaling.fillY);
-		Image aboutButton = new Image(skin.getDrawable("about-button"));
-		aboutButton.setScaling(Scaling.fillY);
-		table.add(settingsButton).center().center().bottom().padRight(-20);
-		table.add(playButton).expandY().fillY().center();
-		table.add(aboutButton).center().bottom().padLeft(-20);
-		table.debug();
-		stage.addActor(table);
-		table.setFillParent(true);
+		
+		ResizableImage aboutButton = new ResizableImage(skin.getDrawable("about-button"), 0.88f, 0.05f, 0.25f, ResizableImage.BOTTOM_RIGHT);
+		aboutButton.addListener(new ClickListener() {
+			public void clicked (InputEvent event, float x, float y)
+	        {
+				super.clicked(event, x, y);
+	        }
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println("ABOUT BUTTON: " + x + ", " + y);
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+	    });
+		widgetGroup = new WidgetGroup();
+		widgetGroup.addActor(playButton);
+		widgetGroup.addActor(logo);
+		widgetGroup.addActor(settingsButton);
+		widgetGroup.addActor(aboutButton);
+		stage.addActor(widgetGroup);
 		
 		Gdx.input.setInputProcessor(stage);
 	}
 
 	@Override
 	public void hide() {
-		this.dispose();
 	}
 
 	@Override
@@ -131,11 +150,11 @@ public class MainMenu implements Screen {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
 		skin.dispose();
-		atlas.dispose();
-		buttonClick.dispose();
 		backgroundTex.dispose();
+		batch.dispose();
+		stage.dispose();
+		atlas.dispose();
 	}
 
 }

@@ -8,16 +8,9 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Scaling;
 import com.sever.ftr.FTRGame;
-import com.sever.ftr.actors.ResizableImage;
 
 public class GameScreen implements Screen {
 
@@ -34,14 +27,6 @@ public class GameScreen implements Screen {
 	private Sprite backgroundSprite;
 
 	private Texture backgroundTex;
-	
-	private Image playButton;
-	private Image settingsButton;
-	private Image aboutButton;
-	private Image logo;
-	
-	private WidgetGroup wGroup;
-
 	public GameScreen(FTRGame game) {
 		this.game = game;
 	}
@@ -60,17 +45,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		stage.setViewport(width, height, false);
-		for (Actor actor : wGroup.getChildren()) {
-			((ResizableImage) actor).resize(width, height);
-		}
-		playButton.setSize(Math.round(height*0.45), Math.round(height*0.45));
-		playButton.setPosition(Math.round(width*0.5) - playButton.getWidth()/2, Math.round(height*0.05));
-		settingsButton.setSize(Math.round(height*0.3), Math.round(height*0.3));
-		settingsButton.setPosition(Math.round(width*0.05), Math.round(height*0.05));
-		aboutButton.setSize(Math.round(height*0.3), Math.round(height*0.3));
-		aboutButton.setPosition(Math.round(width*0.95) - aboutButton.getWidth(), Math.round(height*0.05));
-		logo.setSize(500, Math.round(height*0.5));
-		logo.setPosition(width/2 - logo.getWidth()/2, height - logo.getHeight());
     }
 
 
@@ -86,89 +60,16 @@ public class GameScreen implements Screen {
 		/* Load GUI */
 		atlas = new TextureAtlas(Gdx.files.internal("textures/mainmenu.pack"));
 		skin = new Skin(atlas);
-		
 		batch = new SpriteBatch();
-
 		stage = new Stage();
+		
 		stage.setViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
 				false);
-		
-		playButton = new Image(skin.getDrawable("play-button"));
-		playButton.setScaling(Scaling.fillY);
-		playButton.addListener(new ClickListener() {
-			public void clicked (InputEvent event, float x, float y)
-	        {
-				super.clicked(event, x, y);
-	        }
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				playButton.setDrawable(skin.getDrawable("play-button-down"));
-				return super.touchDown(event, x, y, pointer, button);
-			}
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				super.touchUp(event, x, y, pointer, button);
-				playButton.setDrawable(skin.getDrawable("play-button"));
-			}
-	    });
-		settingsButton = new Image(skin.getDrawable("settings-button"));
-		settingsButton.setScaling(Scaling.fillY);
-		settingsButton.addListener(new ClickListener() {
-			public void clicked (InputEvent event, float x, float y)
-	        {
-				super.clicked(event, x, y);
-	        }
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("TEST" + x);
-				return super.touchDown(event, x, y, pointer, button);
-			}
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				super.touchUp(event, x, y, pointer, button);
-				settingsButton.setDrawable(skin.getDrawable("settings-button"));
-			}
-	    });
-		ResizableImage testButton = new ResizableImage(skin.getDrawable("logo"), 0.5f, 1f, 0.5f, ResizableImage.TOP_CENTER);
-		testButton.addListener(new ClickListener() {
-			public void clicked (InputEvent event, float x, float y)
-	        {
-				super.clicked(event, x, y);
-	        }
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("TEST: " + x + ", " + y);
-				return super.touchDown(event, x, y, pointer, button);
-			}
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				super.touchUp(event, x, y, pointer, button);
-			}
-	    });
-		aboutButton = new Image(skin.getDrawable("about-button"));
-		aboutButton.setScaling(Scaling.fillY);
-		logo = new Image(skin.getDrawable("logo"));
-		logo.setScaling(Scaling.fillY);
-		logo.addListener(new ClickListener() {
-			public void clicked (InputEvent event, float x, float y)
-	        {
-				super.clicked(event, x, y);
-	        }
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("TEST" + x);
-				return super.touchDown(event, x, y, pointer, button);
-			}
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				super.touchUp(event, x, y, pointer, button);
-				settingsButton.setDrawable(skin.getDrawable("settings-button"));
-			}
-	    });
-		wGroup = new WidgetGroup();
-		//wGroup.addActor(playButton);
-		wGroup.addActor(testButton);
-		//wGroup.addActor(testButton);
-		//wGroup.addActor(logo);
-		stage.addActor(wGroup);
-		
 		Gdx.input.setInputProcessor(stage);
 		
 		
 		// MIDI stuff
-		//game.playMidi("sound/Vaja1.mid", false);
+		game.playMidi("sound/Vaja1.mid", false);
 		/*MidiFile mf;
 		try {
 			mf = new MidiFile(Gdx.files.internal("sound/Vaja1.mid").read());
@@ -232,5 +133,4 @@ public class GameScreen implements Screen {
 		stage.dispose();
 		atlas.dispose();
 	}
-
 }

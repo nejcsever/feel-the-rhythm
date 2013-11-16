@@ -3,11 +3,18 @@ package com.sever.ftr;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.sever.ftr.midi.MidiPlayer;
+import com.sever.ftr.screens.GameScreen;
 import com.sever.ftr.screens.MainMenu;
 
 public class FTRGame extends Game {
+	
+	/* Screen names */
+	public static final String GAME_SCREEN = "gameScreen";
+	public static final String MAIN_MENU_SCREEN = "mainMenuScreen";
+	
 	/* List of game screens */
 	private Screen mainMenuScreen;
+	private Screen gameScreen;
 	
 	private MidiPlayer midiPlayer;
 	
@@ -24,6 +31,8 @@ public class FTRGame extends Game {
 	@Override
 	public void dispose() {
 		super.dispose();
+		midiPlayer.stop();
+		midiPlayer.release();
 	}
 
 	@Override
@@ -52,5 +61,16 @@ public class FTRGame extends Game {
         midiPlayer.setVolume(100f);
         midiPlayer.open(source);
         midiPlayer.play();
+	}
+	
+	public void switchScreen(String screenName) {
+		if (screenName.equals(GAME_SCREEN)) {
+			if (gameScreen == null)
+				gameScreen = new GameScreen(this);
+			this.setScreen(gameScreen);
+		}
+		if (screenName.equals(MAIN_MENU_SCREEN)) {
+			this.setScreen(mainMenuScreen);
+		}
 	}
 }
