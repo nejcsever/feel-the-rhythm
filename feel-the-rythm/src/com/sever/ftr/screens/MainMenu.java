@@ -107,9 +107,6 @@ public class MainMenu implements Screen {
 				System.out.println("SETTINGS BUTTON: " + x + ", " + y);
 				return super.touchDown(event, x, y, pointer, button);
 			}
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				super.touchUp(event, x, y, pointer, button);
-			}
 	    });
 		
 		ResizableImage aboutButton = new ResizableImage(skin.getDrawable("about-button"), 0.88f, 0.05f, 0.25f, ResizableImage.BOTTOM_RIGHT);
@@ -121,9 +118,6 @@ public class MainMenu implements Screen {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println("ABOUT BUTTON: " + x + ", " + y);
 				return super.touchDown(event, x, y, pointer, button);
-			}
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				super.touchUp(event, x, y, pointer, button);
 			}
 	    });
 		widgetGroup = new WidgetGroup();

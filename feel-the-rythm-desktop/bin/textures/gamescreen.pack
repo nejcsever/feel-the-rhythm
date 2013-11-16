@@ -1,0 +1,33 @@
+
+gamescreen.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+done-button
+  rotate: false
+  xy: 1, 87
+  size: 106, 140
+  orig: 106, 140
+  offset: 0, 0
+  index: -1
+replay-button
+  rotate: false
+  xy: 109, 87
+  size: 106, 140
+  orig: 106, 140
+  offset: 0, 0
+  index: -1
+note-pause-down
+  rotate: false
+  xy: 1, 1
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+note-pause
+  rotate: false
+  xy: 87, 1
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1

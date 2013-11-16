@@ -63,6 +63,9 @@ public class FTRGame extends Game {
         midiPlayer.play();
 	}
 	
+	public void replayMidi() {
+	}
+	
 	public void switchScreen(String screenName) {
 		if (screenName.equals(GAME_SCREEN)) {
 			if (gameScreen == null)

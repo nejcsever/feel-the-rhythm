@@ -124,4 +124,15 @@ public class ResizableImage extends Image {
 	public void drawOriginalImage() {
 		setDrawable(image);
 	}
+	
+	/**
+	 * Toggles between original image and down image.
+	 */
+	public void toggleImage() {
+		if (getDrawable() == image) {
+			drawImageDown();
+		} else {
+			drawOriginalImage();
+		}
+	}
 }

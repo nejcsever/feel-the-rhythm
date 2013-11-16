@@ -8,9 +8,14 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
+import com.sever.ftr.actors.ResizableImage;
 
 public class GameScreen implements Screen {
 
@@ -27,6 +32,8 @@ public class GameScreen implements Screen {
 	private Sprite backgroundSprite;
 
 	private Texture backgroundTex;
+
+	private WidgetGroup widgetGroup;
 	public GameScreen(FTRGame game) {
 		this.game = game;
 	}
@@ -45,6 +52,9 @@ public class GameScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		stage.setViewport(width, height, false);
+		for (Actor actor : widgetGroup.getChildren()) {
+			((ResizableImage) actor).resize(width, height);
+		}
     }
 
 
@@ -58,13 +68,58 @@ public class GameScreen implements Screen {
 				Gdx.graphics.getHeight());
 
 		/* Load GUI */
-		atlas = new TextureAtlas(Gdx.files.internal("textures/mainmenu.pack"));
+		atlas = new TextureAtlas(Gdx.files.internal("textures/gamescreen.pack"));
 		skin = new Skin(atlas);
 		batch = new SpriteBatch();
 		stage = new Stage();
 		
 		stage.setViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
 				false);
+		
+		final ResizableImage doneButton = new ResizableImage(skin.getDrawable("done-button"), 0.95f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
+		doneButton.addListener(new ClickListener() {
+			public void clicked (InputEvent event, float x, float y)
+	        {
+				game.switchScreen(FTRGame.MAIN_MENU_SCREEN);
+				super.clicked(event, x, y);
+	        }
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println("DONE BUTTON: " + x + ", " + y);
+				return super.touchDown(event, x, y, pointer, button);
+			}
+	    });
+		final ResizableImage replayButton = new ResizableImage(skin.getDrawable("replay-button"), 0.8f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
+		replayButton.addListener(new ClickListener() {
+			public void clicked (InputEvent event, float x, float y)
+	        {
+				game.replayMidi();
+				super.clicked(event, x, y);
+	        }
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println("REPLAY BUTTON: " + x + ", " + y);
+				return super.touchDown(event, x, y, pointer, button);
+			}
+	    });
+		
+		final ResizableImage notePauseButton = new ResizableImage(skin.getDrawable("note-pause"), skin.getDrawable("note-pause-down"),0.5f, 0.05f, 0.15f, ResizableImage.BOTTOM_RIGHT);
+		notePauseButton.addListener(new ClickListener() {
+			public void clicked (InputEvent event, float x, float y)
+	        {
+				super.clicked(event, x, y);
+	        }
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				System.out.println("NOTE PAUSE BUTTON: " + x + ", " + y);
+				notePauseButton.toggleImage();
+				return super.touchDown(event, x, y, pointer, button);
+			}
+	    });
+		
+		widgetGroup = new WidgetGroup();
+		widgetGroup.addActor(doneButton);
+		widgetGroup.addActor(replayButton);
+		widgetGroup.addActor(notePauseButton);
+		stage.addActor(widgetGroup);
+		
 		Gdx.input.setInputProcessor(stage);
 		
 		
