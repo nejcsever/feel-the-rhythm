@@ -1,4 +1,4 @@
-package com.sever.ftr.actors;
+package com.sever.ftr.handlers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;

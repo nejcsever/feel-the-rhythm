@@ -5,28 +5,119 @@ filter: Linear,Linear
 repeat: none
 done-button
   rotate: false
-  xy: 1, 87
+  xy: 2, 90
+  size: 106, 140
+  orig: 106, 140
+  offset: 0, 0
+  index: -1
+replay-button-down
+  rotate: false
+  xy: 112, 90
   size: 106, 140
   orig: 106, 140
   offset: 0, 0
   index: -1
 replay-button
   rotate: false
-  xy: 109, 87
+  xy: 222, 90
   size: 106, 140
   orig: 106, 140
   offset: 0, 0
   index: -1
-note-pause-down
+crotchet-button-down
   rotate: false
-  xy: 1, 1
+  xy: 2, 2
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
-note-pause
+crotchet-button
   rotate: false
-  xy: 87, 1
+  xy: 332, 146
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+dot-button-down
+  rotate: false
+  xy: 90, 2
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+dot-button
+  rotate: false
+  xy: 420, 146
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+minim-button-down
+  rotate: false
+  xy: 178, 2
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+minim-button
+  rotate: false
+  xy: 508, 146
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+pause-button-down
+  rotate: false
+  xy: 596, 146
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+pause-button
+  rotate: false
+  xy: 684, 146
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+quaver-button-down
+  rotate: false
+  xy: 772, 146
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+quaver-button
+  rotate: false
+  xy: 860, 146
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+semibreve-button-down
+  rotate: false
+  xy: 266, 2
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+semibreve-button
+  rotate: false
+  xy: 354, 58
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+semiquaver-button-down
+  rotate: false
+  xy: 442, 58
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+semiquaver-button
+  rotate: false
+  xy: 530, 58
   size: 84, 84
   orig: 84, 84
   offset: 0, 0

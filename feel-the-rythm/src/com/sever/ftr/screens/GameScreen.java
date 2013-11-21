@@ -15,7 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
-import com.sever.ftr.actors.ResizableImage;
+import com.sever.ftr.handlers.NoteButtonHandler;
+import com.sever.ftr.handlers.ResizableImage;
 
 public class GameScreen implements Screen {
 
@@ -72,11 +73,12 @@ public class GameScreen implements Screen {
 		skin = new Skin(atlas);
 		batch = new SpriteBatch();
 		stage = new Stage();
-		
 		stage.setViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
 				false);
 		
-		final ResizableImage doneButton = new ResizableImage(skin.getDrawable("done-button"), 0.95f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
+		ResizableImage doneButton = new ResizableImage(skin.getDrawable("done-button"), 0.95f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
+		ResizableImage replayButton = new ResizableImage(skin.getDrawable("replay-button"), skin.getDrawable("replay-button-down"), 0.825f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
+		
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
@@ -88,11 +90,10 @@ public class GameScreen implements Screen {
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });
-		final ResizableImage replayButton = new ResizableImage(skin.getDrawable("replay-button"), 0.8f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
 		replayButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				game.replayMidi();
+				game.replayMidi("sound/Vaja1.mid");
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -101,27 +102,14 @@ public class GameScreen implements Screen {
 			}
 	    });
 		
-		final ResizableImage notePauseButton = new ResizableImage(skin.getDrawable("note-pause"), skin.getDrawable("note-pause-down"),0.5f, 0.05f, 0.15f, ResizableImage.BOTTOM_RIGHT);
-		notePauseButton.addListener(new ClickListener() {
-			public void clicked (InputEvent event, float x, float y)
-	        {
-				super.clicked(event, x, y);
-	        }
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("NOTE PAUSE BUTTON: " + x + ", " + y);
-				notePauseButton.toggleImage();
-				return super.touchDown(event, x, y, pointer, button);
-			}
-	    });
-		
 		widgetGroup = new WidgetGroup();
 		widgetGroup.addActor(doneButton);
 		widgetGroup.addActor(replayButton);
-		widgetGroup.addActor(notePauseButton);
+		new NoteButtonHandler(widgetGroup, skin); // Add note buttons to widgetGroup
+		
 		stage.addActor(widgetGroup);
 		
 		Gdx.input.setInputProcessor(stage);
-		
 		
 		// MIDI stuff
 		game.playMidi("sound/Vaja1.mid", false);
@@ -170,6 +158,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void hide() {
+		game.stopMidi();
 	}
 
 	@Override

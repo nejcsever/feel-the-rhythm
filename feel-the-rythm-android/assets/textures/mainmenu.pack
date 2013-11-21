@@ -3,50 +3,38 @@ mainmenu.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-background
-  rotate: false
-  xy: 0, 450
-  size: 1000, 562
-  orig: 1000, 562
-  offset: 0, 0
-  index: -1
 logo
   rotate: false
-  xy: 0, 140
+  xy: 2, 510
   size: 800, 310
   orig: 800, 310
   offset: 0, 0
   index: -1
-about-button
-  rotate: false
-  xy: 0, 0
-  size: 106, 140
-  orig: 106, 140
-  offset: 0, 0
-  index: -1
-settings-button
-  rotate: false
-  xy: 800, 310
-  size: 106, 140
-  orig: 106, 140
-  offset: 0, 0
-  index: -1
-
-mainmenu2.png
-format: RGBA8888
-filter: Linear,Linear
-repeat: none
 play-button-down
   rotate: false
-  xy: 0, 0
+  xy: 2, 256
   size: 250, 250
   orig: 250, 250
   offset: 0, 0
   index: -1
 play-button
   rotate: false
-  xy: 250, 0
+  xy: 2, 2
   size: 250, 250
   orig: 250, 250
+  offset: 0, 0
+  index: -1
+about-button
+  rotate: false
+  xy: 806, 680
+  size: 106, 140
+  orig: 106, 140
+  offset: 0, 0
+  index: -1
+settings-button
+  rotate: false
+  xy: 916, 680
+  size: 106, 140
+  orig: 106, 140
   offset: 0, 0
   index: -1

@@ -63,7 +63,17 @@ public class FTRGame extends Game {
         midiPlayer.play();
 	}
 	
-	public void replayMidi() {
+	public void replayMidi(String source) {
+		if (midiPlayer.isPlaying()) {
+			midiPlayer.stop();
+		}
+		playMidi(source, false);
+	}
+	
+	public void stopMidi() {
+		if (midiPlayer.isPlaying()) {
+			midiPlayer.stop();
+		}
 	}
 	
 	public void switchScreen(String screenName) {
