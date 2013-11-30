@@ -15,6 +15,10 @@ public class Note {
 		this.pitch = pitch;
 		this.name = name;
 	}
+	
+	public void setPitch(int pitch) {
+		this.pitch = pitch;
+	}
 
 	public int getPitch() {
 		return pitch;

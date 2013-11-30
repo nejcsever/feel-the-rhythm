@@ -5,21 +5,14 @@ filter: Linear,Linear
 repeat: none
 background
   rotate: false
-  xy: 1, 603
-  size: 860, 350
-  orig: 860, 350
-  offset: 0, 0
-  index: -1
-left-arrow
-  rotate: false
-  xy: 1, 1
-  size: 100, 600
-  orig: 100, 600
+  xy: 1, 103
+  size: 685, 635
+  orig: 685, 635
   offset: 0, 0
   index: -1
 sample-note
   rotate: false
-  xy: 863, 853
+  xy: 1, 1
   size: 160, 100
   orig: 160, 100
   offset: 0, 0

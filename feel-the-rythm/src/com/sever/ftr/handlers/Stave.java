@@ -1,19 +1,22 @@
 package com.sever.ftr.handlers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class Stave extends WidgetGroup {
 
 	private static final int NUMBER_OF_COLUMNS = 5;
+	private static final int NUMBER_OF_ROWS = 11;
+	private static final float FRONT_PADDING = 0.5f;
 	
 	private float x;
 	private float y;
@@ -21,6 +24,7 @@ public class Stave extends WidgetGroup {
 	private float width;
 	private int currentColumnPosition;
 	private float columnWidthPercentage = (float) 1 / NUMBER_OF_COLUMNS;
+	private float rowHeightPercentage = (float) 1 / NUMBER_OF_ROWS;
 	private Image background;
 	
 	private TextureAtlas atlas;
@@ -54,24 +58,24 @@ public class Stave extends WidgetGroup {
 		/*create empty noteWindow */
 		noteWindow = new ResizableImage[NUMBER_OF_COLUMNS];
 		for(int i = 0; i < noteWindow.length; i++) {
-			noteWindow[i] = new ResizableImage(this.height*0.17f, ResizableImage.CENTER_CENTER);
+			noteWindow[i] = new ResizableImage(this.height*0.15f, ResizableImage.CENTER_CENTER);
 			this.addActor(noteWindow[i]);
 		}
-		addNote(0, new Note(Note.SEMIBREVE, 0));
-		addNote(1, new Note(Note.SEMIBREVE, 1));
-		addNote(2, new Note(Note.SEMIBREVE, 2));
-		addNote(3, new Note(Note.SEMIBREVE, 3));
-		addNote(4, new Note(Note.SEMIBREVE, 4));
-		addNote(5, new Note(Note.SEMIBREVE, 5));
-		addNote(6, new Note(Note.SEMIBREVE, 6));
-		addNote(7, new Note(Note.SEMIBREVE, 7));
-		addNote(8, new Note(Note.SEMIBREVE, 8));
-		addNote(9, new Note(Note.SEMIBREVE, 9));
+		
+		this.addListener(new ClickListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				handleStaveTouch(((Stave)event.getListenerActor()), x, y);
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				super.touchUp(event, x, y, pointer, button);
+			}
+		});
 	}
 	
 	public void resize(int width, int height) {
-		background.setPosition((float)(width * x), (float)(height * (y + this.height*0.2f)));
-		background.setSize((float)(width * this.width), (float)(height * (this.height*0.8f)));
+		background.setPosition((float)(width * x), (float)(height * y));
+		background.setSize((float)(width * this.width), (float)(height * this.height));
 		for(int i = 0; i < noteWindow.length; i++) {
 			noteWindow[i].resize(width, height);
 		}
@@ -82,17 +86,15 @@ public class Stave extends WidgetGroup {
 			/* If noteList is not shorter then sum of values */
 			if (i + currentColumnPosition < noteList.size()) {
 				Note tempNote = noteList.get(i + currentColumnPosition);
-				System.out.println("i: " +i + "; pitch: " + tempNote.getPitch());
 				if (tempNote != null) {
 					noteWindow[i].setDrawable(noteDrawables.get(tempNote.getName()));
-					noteWindow[i].setyPercentage((height*0.1f*tempNote.getPitch())+y);
-					noteWindow[i].setxPercentage(x + width * (i+0.5f)*columnWidthPercentage);
+					noteWindow[i].setyPercentage((height*rowHeightPercentage*tempNote.getPitch())+y);
+					noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
 				}
 			} else {
 				noteWindow[i].resetImage();
 			}
 		}
-		/*skin.getDrawable("sample-note"), x + width * (i+0.5f)*tempPerc, (height*0.1f*i)+y, this.height*0.17f, */
 	}
 	
 	/**
@@ -117,5 +119,28 @@ public class Stave extends WidgetGroup {
 	public void addNote(int index, Note note) {
 		noteList.add(index, note);
 		updateNoteWindow();
+	}
+	
+	private void handleStaveTouch(Stave stave, float x, float y) {
+		float widthPx = stave.width * Gdx.graphics.getWidth();
+		float xPx = stave.x * Gdx.graphics.getWidth();
+		int relativeIndex = Math.round((((x - xPx) / widthPx)/columnWidthPercentage) + FRONT_PADDING) - 1;
+		
+		float heightPx = stave.height * Gdx.graphics.getHeight();
+		float yPx = stave.y * Gdx.graphics.getHeight();
+		int relativePitch = Math.round(((y - yPx) / heightPx)/rowHeightPercentage);
+		System.out.println(relativePitch);
+		if (relativePitch > NUMBER_OF_ROWS) {
+			relativePitch = NUMBER_OF_ROWS;
+		} else if (relativePitch < 0) { // this may happen if touch is recieved on note object and not from background so it must bo disabled
+			relativePitch = 0;
+		}
+		
+		if (relativeIndex + currentColumnPosition >= noteList.size()) {
+			addNote(noteList.size(), new Note(Note.SEMIBREVE, relativePitch));
+		} else {
+			noteList.get(relativeIndex + currentColumnPosition).setPitch(relativePitch);
+			updateNoteWindow();
+		}
 	}
 }

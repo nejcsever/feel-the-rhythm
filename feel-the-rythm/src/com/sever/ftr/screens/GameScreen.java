@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -121,7 +120,7 @@ public class GameScreen implements Screen {
 		new NoteButtonHandler(widgetGroup, skin); // Add note buttons to widgetGroup
 		
 		/* Stave */
-		stave = new Stave(0.25f, 0.35f, 0.5f, 0.65f);
+		stave = new Stave(0.25f, 0.35f, 0.55f, 0.65f);
 		stage.addActor(stave);
 		stage.addActor(widgetGroup);
 		// Stave movement
