@@ -37,6 +37,15 @@ public class ResizableImage extends Image {
 	private Drawable image;
 	private Drawable imageDown;
 	
+	public ResizableImage(float heightPercentage, int origin) {
+		super();
+		setScaling(Scaling.fillY);
+		this.origin = CENTER_CENTER;
+		this.heightPercentage = heightPercentage;
+		
+		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+	
 	/**
 	 * Default origin is CENTER_CENTER. Constructor places widget depending on given xPercentage, yPercentage and heightPErcentage.
 	 * @param image - Drawable of the widget
@@ -135,4 +144,25 @@ public class ResizableImage extends Image {
 			drawOriginalImage();
 		}
 	}
+	
+	public void setxPercentage(float yPercentage) {
+		this.xPercentage = yPercentage;
+		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+
+	public void setyPercentage(float yPercentage) {
+		this.yPercentage = yPercentage;
+		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+
+	public void setImage(Drawable image) {
+		this.image = image;
+		this.imageAspectRatio = image.getMinHeight() / image.getMinWidth();
+	}
+	
+	public void resetImage() {
+		super.setDrawable(null);
+		this.image = null;
+	}
+	
 }

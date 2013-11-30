@@ -11,12 +11,16 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.handlers.NoteButtonHandler;
 import com.sever.ftr.handlers.ResizableImage;
+import com.sever.ftr.handlers.Stave;
 
 public class GameScreen implements Screen {
 
@@ -33,8 +37,13 @@ public class GameScreen implements Screen {
 	private Sprite backgroundSprite;
 
 	private Texture backgroundTex;
-
+	
 	private WidgetGroup widgetGroup;
+	
+	private Stave stave;
+	
+	Image stoveBg;
+	
 	public GameScreen(FTRGame game) {
 		this.game = game;
 	}
@@ -48,6 +57,7 @@ public class GameScreen implements Screen {
 		backgroundSprite.draw(batch);
 		batch.end();
 		stage.draw();
+		Table.drawDebug(stage);
 	}
 
 	@Override
@@ -56,6 +66,8 @@ public class GameScreen implements Screen {
 		for (Actor actor : widgetGroup.getChildren()) {
 			((ResizableImage) actor).resize(width, height);
 		}
+		/* Resize stave */
+		stave.resize(width, height);
     }
 
 
@@ -78,7 +90,8 @@ public class GameScreen implements Screen {
 		
 		ResizableImage doneButton = new ResizableImage(skin.getDrawable("done-button"), 0.95f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
 		ResizableImage replayButton = new ResizableImage(skin.getDrawable("replay-button"), skin.getDrawable("replay-button-down"), 0.825f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
-		
+		ResizableImage leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"), 0.23f, 0.85f,  0.4f, ResizableImage.TOP_RIGHT);
+		ResizableImage rightArrowButton = new ResizableImage(skin.getDrawable("right-arrow"), skin.getDrawable("right-arrow-down"), 0.92f, 0.85f,  0.4f, ResizableImage.TOP_LEFT);
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
@@ -86,7 +99,6 @@ public class GameScreen implements Screen {
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("DONE BUTTON: " + x + ", " + y);
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });
@@ -97,19 +109,48 @@ public class GameScreen implements Screen {
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("REPLAY BUTTON: " + x + ", " + y);
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });
 		
 		widgetGroup = new WidgetGroup();
+		widgetGroup.addActor(leftArrowButton);
+		widgetGroup.addActor(rightArrowButton);
 		widgetGroup.addActor(doneButton);
 		widgetGroup.addActor(replayButton);
 		new NoteButtonHandler(widgetGroup, skin); // Add note buttons to widgetGroup
 		
+		/* Stave */
+		stave = new Stave(0.25f, 0.35f, 0.5f, 0.65f);
+		stage.addActor(stave);
 		stage.addActor(widgetGroup);
+		// Stave movement
+		leftArrowButton.addListener(new ClickListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				stave.moveLeft();
+				((ResizableImage) event.getListenerActor()).drawImageDown();
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				((ResizableImage) event.getListenerActor()).drawOriginalImage();
+				super.touchUp(event, x, y, pointer, button);
+			}
+	    });
+		rightArrowButton.addListener(new ClickListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				stave.moveRight();
+				((ResizableImage) event.getListenerActor()).drawImageDown();
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				((ResizableImage) event.getListenerActor()).drawOriginalImage();
+				super.touchUp(event, x, y, pointer, button);
+			}
+	    });
 		
 		Gdx.input.setInputProcessor(stage);
+		
+		
 		
 		// MIDI stuff
 		game.playMidi("sound/Vaja1.mid", false);
