@@ -37,9 +37,13 @@ public class GameScreen implements Screen {
 
 	private Texture backgroundTex;
 	
-	private WidgetGroup widgetGroup;
+	private NoteButtonHandler noteButtonHandler;
 	
 	private Stave stave;
+	ResizableImage doneButton;
+	ResizableImage replayButton;
+	ResizableImage leftArrowButton;
+	ResizableImage rightArrowButton;
 	
 	Image stoveBg;
 	
@@ -62,9 +66,14 @@ public class GameScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		stage.setViewport(width, height, false);
-		for (Actor actor : widgetGroup.getChildren()) {
+		for (Actor actor : noteButtonHandler.getChildren()) {
 			((ResizableImage) actor).resize(width, height);
 		}
+		/* resize other buttons */
+		doneButton.resize(width, height);
+		replayButton.resize(width, height);
+		leftArrowButton.resize(width, height);
+		rightArrowButton.resize(width, height);
 		/* Resize stave */
 		stave.resize(width, height);
     }
@@ -87,10 +96,10 @@ public class GameScreen implements Screen {
 		stage.setViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
 				false);
 		
-		ResizableImage doneButton = new ResizableImage(skin.getDrawable("done-button"), 0.95f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
-		ResizableImage replayButton = new ResizableImage(skin.getDrawable("replay-button"), skin.getDrawable("replay-button-down"), 0.825f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
-		ResizableImage leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"), 0.23f, 0.85f,  0.4f, ResizableImage.TOP_RIGHT);
-		ResizableImage rightArrowButton = new ResizableImage(skin.getDrawable("right-arrow"), skin.getDrawable("right-arrow-down"), 0.92f, 0.85f,  0.4f, ResizableImage.TOP_LEFT);
+		doneButton = new ResizableImage(skin.getDrawable("done-button"), 0.95f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
+		replayButton = new ResizableImage(skin.getDrawable("replay-button"), skin.getDrawable("replay-button-down"), 0.825f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
+		leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"), 0.23f, 0.85f,  0.4f, ResizableImage.TOP_RIGHT);
+		rightArrowButton = new ResizableImage(skin.getDrawable("right-arrow"), skin.getDrawable("right-arrow-down"), 0.92f, 0.85f,  0.4f, ResizableImage.TOP_LEFT);
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
@@ -112,17 +121,17 @@ public class GameScreen implements Screen {
 			}
 	    });
 		
-		widgetGroup = new WidgetGroup();
-		widgetGroup.addActor(leftArrowButton);
-		widgetGroup.addActor(rightArrowButton);
-		widgetGroup.addActor(doneButton);
-		widgetGroup.addActor(replayButton);
-		new NoteButtonHandler(widgetGroup, skin); // Add note buttons to widgetGroup
+		stage.addActor(doneButton);
+		stage.addActor(replayButton);
+		stage.addActor(leftArrowButton);
+		stage.addActor(rightArrowButton);
+		
+		noteButtonHandler = new NoteButtonHandler(skin); // Add note buttons to widgetGroup
 		
 		/* Stave */
-		stave = new Stave(0.25f, 0.35f, 0.55f, 0.65f);
+		stave = new Stave(0.25f, 0.35f, 0.55f, 0.65f, noteButtonHandler);
 		stage.addActor(stave);
-		stage.addActor(widgetGroup);
+		stage.addActor(noteButtonHandler);
 		// Stave movement
 		leftArrowButton.addListener(new ClickListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

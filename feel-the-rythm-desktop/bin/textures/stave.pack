@@ -10,9 +10,16 @@ background
   orig: 685, 635
   offset: 0, 0
   index: -1
-sample-note
+empty-note
   rotate: false
   xy: 1, 1
+  size: 160, 100
+  orig: 160, 100
+  offset: 0, 0
+  index: -1
+full-note
+  rotate: false
+  xy: 688, 638
   size: 160, 100
   orig: 160, 100
   offset: 0, 0

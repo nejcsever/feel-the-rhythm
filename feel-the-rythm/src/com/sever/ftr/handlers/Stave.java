@@ -18,6 +18,9 @@ public class Stave extends WidgetGroup {
 	private static final int NUMBER_OF_ROWS = 11;
 	private static final float FRONT_PADDING = 0.5f;
 	
+	private static final String FULL_NOTE = "full-note";
+	private static final String EMPTY_NOTE = "empty-note";
+	
 	private float x;
 	private float y;
 	private float height;
@@ -32,20 +35,19 @@ public class Stave extends WidgetGroup {
 	
 	private ArrayList<Note> noteList;
 	private ResizableImage[] noteWindow;
-	private HashMap<String, Drawable> noteDrawables;
 	
-	public Stave(float x, float y, float height, float width) {
+	private NoteButtonHandler noteButtonHandler;
+	
+	public Stave(float x, float y, float height, float width, NoteButtonHandler noteButtonHandler) {
 		this.x = x;
 		this.y = y;
 		this.height = height;
 		this.width = width;
+		this.noteButtonHandler = noteButtonHandler;
 		currentColumnPosition = 0;
 		
 		atlas = new TextureAtlas(Gdx.files.internal("textures/stave.pack"));
 		skin = new Skin(atlas);
-		noteDrawables = new HashMap<String, Drawable>(){{
-			put(Note.SEMIBREVE, skin.getDrawable("sample-note"));
-		}};
 		
 		System.out.println(height+y);
 		
@@ -82,12 +84,18 @@ public class Stave extends WidgetGroup {
 	}
 	
 	public void updateNoteWindow() {
+		/* determine which note to display */
+		int currentNoteLength = noteButtonHandler.getSelectedButton().getNoteLength();
+		Drawable currentNoteDrawable = skin.getDrawable(this.FULL_NOTE);
+		if (currentNoteLength < 2)
+			currentNoteDrawable = skin.getDrawable(this.EMPTY_NOTE);
+		
 		for (int i = 0; i < noteWindow.length; i++) {
 			/* If noteList is not shorter then sum of values */
 			if (i + currentColumnPosition < noteList.size()) {
 				Note tempNote = noteList.get(i + currentColumnPosition);
 				if (tempNote != null) {
-					noteWindow[i].setDrawable(noteDrawables.get(tempNote.getName()));
+					noteWindow[i].setDrawable(currentNoteDrawable);
 					noteWindow[i].setyPercentage((height*rowHeightPercentage*tempNote.getPitch())+y);
 					noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
 				}
@@ -129,13 +137,12 @@ public class Stave extends WidgetGroup {
 		float heightPx = stave.height * Gdx.graphics.getHeight();
 		float yPx = stave.y * Gdx.graphics.getHeight();
 		int relativePitch = Math.round(((y - yPx) / heightPx)/rowHeightPercentage);
-		System.out.println(relativePitch);
 		if (relativePitch > NUMBER_OF_ROWS) {
 			relativePitch = NUMBER_OF_ROWS;
-		} else if (relativePitch < 0) { // this may happen if touch is recieved on note object and not from background so it must bo disabled
+		} else if (relativePitch < 0) { // this may happen if touch is recieved on note object and not from background so it must be disabled
 			relativePitch = 0;
 		}
-		
+		System.out.println(noteButtonHandler.getSelectedButton().getNoteLength());
 		if (relativeIndex + currentColumnPosition >= noteList.size()) {
 			addNote(noteList.size(), new Note(Note.SEMIBREVE, relativePitch));
 		} else {

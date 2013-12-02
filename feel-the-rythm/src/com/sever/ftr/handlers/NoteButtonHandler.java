@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class NoteButtonHandler {
+public class NoteButtonHandler extends WidgetGroup {
 	private static final String PAUSE = "pause";
 	private static final String DOT = "dot";
 	private static final String NOTE = "note";
@@ -13,7 +13,7 @@ public class NoteButtonHandler {
 	private static NoteButton selectedButton;
 	private static String noteType = NOTE;
 	
-	public NoteButtonHandler(WidgetGroup widgetGroup, Skin skin) {
+	public NoteButtonHandler(Skin skin) {
 		final ResizableImage pauseButton = new ResizableImage(skin.getDrawable("pause-button"), skin.getDrawable("pause-button-down"),0.325f, 0.05f, 0.15f, ResizableImage.BOTTOM_LEFT);
 		final ResizableImage dotButton = new ResizableImage(skin.getDrawable("dot-button"), skin.getDrawable("dot-button-down"),0.2f, 0.05f, 0.15f, ResizableImage.BOTTOM_LEFT);
 		pauseButton.addListener(new ClickListener() {
@@ -42,21 +42,21 @@ public class NoteButtonHandler {
 	    });
 		
 		
-		NoteButton semibreveButton = new NoteButton("semibreve", new ResizableImage(skin.getDrawable("semibreve-button"), skin.getDrawable("semibreve-button-down"),0.05f, 0.95f, 0.15f, ResizableImage.TOP_LEFT));
-		NoteButton minimButton = new NoteButton("minimButton", new ResizableImage(skin.getDrawable("minim-button"), skin.getDrawable("minim-button-down"),0.05f, 0.7625f, 0.15f, ResizableImage.TOP_LEFT));
-		NoteButton crotchetButton = new NoteButton("crochetButton", new ResizableImage(skin.getDrawable("crotchet-button"), skin.getDrawable("crotchet-button-down"),0.05f, 0.575f, 0.15f, ResizableImage.TOP_LEFT));
-		NoteButton quaverButton = new NoteButton("quaverButton", new ResizableImage(skin.getDrawable("quaver-button"), skin.getDrawable("quaver-button-down"),0.05f, 0.3875f, 0.15f, ResizableImage.TOP_LEFT));
-		NoteButton semiquaverButton = new NoteButton("semiquaver", new ResizableImage(skin.getDrawable("semiquaver-button"), skin.getDrawable("semiquaver-button-down"),0.05f, 0.2f, 0.15f, ResizableImage.TOP_LEFT));
+		NoteButton semibreveButton = new NoteButton(Note.SEMIBREVE, new ResizableImage(skin.getDrawable("semibreve-button"), skin.getDrawable("semibreve-button-down"),0.05f, 0.95f, 0.15f, ResizableImage.TOP_LEFT));
+		NoteButton minimButton = new NoteButton(Note.MINIM, new ResizableImage(skin.getDrawable("minim-button"), skin.getDrawable("minim-button-down"),0.05f, 0.7625f, 0.15f, ResizableImage.TOP_LEFT));
+		NoteButton crotchetButton = new NoteButton(Note.CROCHET, new ResizableImage(skin.getDrawable("crotchet-button"), skin.getDrawable("crotchet-button-down"),0.05f, 0.575f, 0.15f, ResizableImage.TOP_LEFT));
+		NoteButton quaverButton = new NoteButton(Note.QUAVER, new ResizableImage(skin.getDrawable("quaver-button"), skin.getDrawable("quaver-button-down"),0.05f, 0.3875f, 0.15f, ResizableImage.TOP_LEFT));
+		NoteButton semiquaverButton = new NoteButton(Note.SEMIQUAVER, new ResizableImage(skin.getDrawable("semiquaver-button"), skin.getDrawable("semiquaver-button-down"),0.05f, 0.2f, 0.15f, ResizableImage.TOP_LEFT));
 		
 		setSelectedButton(crotchetButton);
 		
-		widgetGroup.addActor(pauseButton);
-		widgetGroup.addActor(dotButton);
-		widgetGroup.addActor(semibreveButton.image);
-		widgetGroup.addActor(minimButton.image);
-		widgetGroup.addActor(crotchetButton.image);
-		widgetGroup.addActor(quaverButton.image);
-		widgetGroup.addActor(semiquaverButton.image);
+		this.addActor(pauseButton);
+		this.addActor(dotButton);
+		this.addActor(semibreveButton.image);
+		this.addActor(minimButton.image);
+		this.addActor(crotchetButton.image);
+		this.addActor(quaverButton.image);
+		this.addActor(semiquaverButton.image);
 	}
 	
 	private static void setSelectedButton(NoteButton button) {
@@ -67,12 +67,17 @@ public class NoteButtonHandler {
 		selectedButton = button;
 	}
 	
-	private class NoteButton extends ClickListener {
-		private String name;
+	
+	public NoteButton getSelectedButton() {
+		return selectedButton;
+	}
+	
+	public class NoteButton extends ClickListener {
+		private int noteLength;
 		private ResizableImage image;
 
-		public NoteButton(String name, ResizableImage image) {
-			this.name = name;
+		public NoteButton(int noteLength, ResizableImage image) {
+			this.noteLength = noteLength;
 			this.image = image;
 			this.image.addListener(this);
 		}
@@ -80,6 +85,10 @@ public class NoteButtonHandler {
 		public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 			setSelectedButton(this);
 			return super.touchDown(event, x, y, pointer, button);
+		}
+		
+		public int getNoteLength() {
+			return noteLength;
 		}
 	}
 }

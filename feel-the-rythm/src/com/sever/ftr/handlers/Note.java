@@ -2,16 +2,16 @@ package com.sever.ftr.handlers;
 
 public class Note {
 
-	public static final String SEMIBREVE = "semibreve";
-	public static final String MINIM = "minim";
-	public static final String CROCHET = "crochet";
-	public static final String QUAVER = "quaver";
-	public static final String SEMIQUAVER = "semiquaver";
+	public static final int SEMIBREVE = 0;
+	public static final int MINIM = 1;
+	public static final int CROCHET = 2;
+	public static final int QUAVER = 3;
+	public static final int SEMIQUAVER = 4;
 	
 	private int pitch;
-	private String name;
+	private int name;
 	
-	public Note(String name, int pitch) {
+	public Note(int name, int pitch) {
 		this.pitch = pitch;
 		this.name = name;
 	}
@@ -24,7 +24,7 @@ public class Note {
 		return pitch;
 	}
 
-	public String getName() {
+	public int getName() {
 		return name;
 	}
 }
