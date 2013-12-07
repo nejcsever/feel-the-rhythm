@@ -10,10 +10,12 @@ public class Note {
 	
 	private int pitch;
 	private int name;
+	private String type; // Look at NoteButtonHandler constants
 	
-	public Note(int name, int pitch) {
+	public Note(int name, int pitch, String type) {
 		this.pitch = pitch;
 		this.name = name;
+		this.type = type;
 	}
 	
 	public void setPitch(int pitch) {
@@ -26,5 +28,13 @@ public class Note {
 
 	public int getName() {
 		return name;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getType() {
+		return type;
 	}
 }

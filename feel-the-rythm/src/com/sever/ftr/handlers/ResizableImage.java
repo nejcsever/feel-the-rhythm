@@ -31,6 +31,7 @@ public class ResizableImage extends Image {
 	
 	private int origin;
 	private float heightPercentage;
+
 	private float imageAspectRatio = 1;
 	private float xPercentage;
 	private float yPercentage;
@@ -145,6 +146,11 @@ public class ResizableImage extends Image {
 		}
 	}
 	
+	public void setOrigin(int origin) {
+		this.origin = origin;
+		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+	
 	public void setxPercentage(float yPercentage) {
 		this.xPercentage = yPercentage;
 		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -160,9 +166,16 @@ public class ResizableImage extends Image {
 		this.imageAspectRatio = image.getMinHeight() / image.getMinWidth();
 	}
 	
+	public void setImageDown(Drawable image) {
+		this.imageDown = image;
+	}
+	
 	public void resetImage() {
 		super.setDrawable(null);
 		this.image = null;
 	}
-	
+
+	public void setHeightPercentage(float heightPercentage) {
+		this.heightPercentage = heightPercentage;
+	}
 }

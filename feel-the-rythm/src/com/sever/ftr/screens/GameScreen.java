@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.handlers.NoteButtonHandler;
@@ -98,8 +97,8 @@ public class GameScreen implements Screen {
 		
 		doneButton = new ResizableImage(skin.getDrawable("done-button"), 0.95f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
 		replayButton = new ResizableImage(skin.getDrawable("replay-button"), skin.getDrawable("replay-button-down"), 0.825f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
-		leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"), 0.23f, 0.85f,  0.4f, ResizableImage.TOP_RIGHT);
-		rightArrowButton = new ResizableImage(skin.getDrawable("right-arrow"), skin.getDrawable("right-arrow-down"), 0.92f, 0.85f,  0.4f, ResizableImage.TOP_LEFT);
+		leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"), 0.23f, 0.8f,  0.35f, ResizableImage.TOP_RIGHT);
+		rightArrowButton = new ResizableImage(skin.getDrawable("right-arrow"), skin.getDrawable("right-arrow-down"), 0.92f, 0.8f,  0.35f, ResizableImage.TOP_LEFT);
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
@@ -121,15 +120,10 @@ public class GameScreen implements Screen {
 			}
 	    });
 		
-		stage.addActor(doneButton);
-		stage.addActor(replayButton);
-		stage.addActor(leftArrowButton);
-		stage.addActor(rightArrowButton);
-		
 		noteButtonHandler = new NoteButtonHandler(skin); // Add note buttons to widgetGroup
 		
 		/* Stave */
-		stave = new Stave(0.25f, 0.35f, 0.55f, 0.65f, noteButtonHandler);
+		stave = new Stave(0.25f, 0.35f, 0.50f, 0.65f, noteButtonHandler);
 		stage.addActor(stave);
 		stage.addActor(noteButtonHandler);
 		// Stave movement
@@ -155,6 +149,12 @@ public class GameScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 			}
 	    });
+
+		
+		stage.addActor(doneButton);
+		stage.addActor(replayButton);
+		stage.addActor(leftArrowButton);
+		stage.addActor(rightArrowButton);
 		
 		Gdx.input.setInputProcessor(stage);
 		

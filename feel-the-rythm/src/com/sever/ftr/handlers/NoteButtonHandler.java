@@ -6,9 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class NoteButtonHandler extends WidgetGroup {
-	private static final String PAUSE = "pause";
-	private static final String DOT = "dot";
-	private static final String NOTE = "note";
+	public static final String PAUSE = "pause";
+	public static final String DOT = "dot";
+	public static final String NOTE = "note";
 	
 	private static NoteButton selectedButton;
 	private static String noteType = NOTE;
@@ -70,6 +70,10 @@ public class NoteButtonHandler extends WidgetGroup {
 	
 	public NoteButton getSelectedButton() {
 		return selectedButton;
+	}
+	
+	public String getNoteType() {
+		return noteType;
 	}
 	
 	public class NoteButton extends ClickListener {
