@@ -3,65 +3,72 @@ stave.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-full-note
-  rotate: false
-  xy: 1, 703
-  size: 160, 100
-  orig: 160, 100
-  offset: 0, 0
-  index: -1
 empty-stem-down
   rotate: false
-  xy: 163, 403
+  xy: 1, 403
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 empty-stem
   rotate: false
-  xy: 355, 403
+  xy: 193, 403
+  size: 190, 400
+  orig: 190, 400
+  offset: 0, 0
+  index: -1
+full-note-down
+  rotate: false
+  xy: 385, 403
+  size: 190, 400
+  orig: 190, 400
+  offset: 0, 0
+  index: -1
+full-note
+  rotate: false
+  xy: 577, 403
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 full-stem-down
   rotate: false
-  xy: 547, 403
+  xy: 769, 403
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 full-stem
   rotate: false
-  xy: 739, 403
+  xy: 1, 1
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 stem-doubleflag-down
   rotate: false
-  xy: 1, 1
+  xy: 193, 1
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 stem-doubleflag
   rotate: false
-  xy: 193, 1
+  xy: 385, 1
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 stem-flag-down
   rotate: false
-  xy: 385, 1
+  xy: 577, 1
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 stem-flag
   rotate: false
-  xy: 577, 1
+  xy: 769, 1
   size: 190, 400
   orig: 190, 400
   offset: 0, 0

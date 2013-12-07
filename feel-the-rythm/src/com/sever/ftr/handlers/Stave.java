@@ -14,8 +14,8 @@ public class Stave extends WidgetGroup {
 
 	private static final int NUMBER_OF_COLUMNS = 5;
 	private static final int NUMBER_OF_ROWS = 11;
-	private static final String[] NOTE_DRAWABLE_STRINGS = {"empty-stem", "empty-stem", "full-stem", "stem-flag", "stem-doubleflag"};
-	private static final String[] NOTE_DRAWABLE_DOWN_STRINGS = {"empty-stem-down", "empty-stem-down", "full-stem-down", "stem-flag-down", "stem-doubleflag-down"};
+	private static final String[] NOTE_DRAWABLE_STRINGS = {"full-note", "empty-stem", "full-stem", "stem-flag", "stem-doubleflag"};
+	private static final String[] NOTE_DRAWABLE_DOWN_STRINGS = {"full-note-down", "empty-stem-down", "full-stem-down", "stem-flag-down", "stem-doubleflag-down"};
 	
 	private static final float STEM_NOTE_SIZE_PERCENTAGE = 0.7f;
 	private static final float FRONT_PADDING = 0.6f; // paddign for first shown note
@@ -106,7 +106,6 @@ public class Stave extends WidgetGroup {
 				noteWindow[i].resetImage();
 				return;
 			} else {
-				System.out.println(currentNote.getName());
 				noteWindow[i].setImage(skin.getDrawable(NOTE_DRAWABLE_STRINGS[currentNote.getName()]));
 				noteWindow[i].setImageDown(skin.getDrawable(NOTE_DRAWABLE_DOWN_STRINGS[currentNote.getName()]));
 				noteWindow[i].setHeightPercentage(height * STEM_NOTE_SIZE_PERCENTAGE);
@@ -125,53 +124,7 @@ public class Stave extends WidgetGroup {
 				noteWindow[i].setyPercentage(yPercentage);
 				noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
 			}
-			
-			/* If noteList is not shorter then sum of values */
-			/*if (i + currentColumnPosition < noteList.size()) {
-				Note tempNote = noteList.get(i + currentColumnPosition);
-				if (tempNote == null) {
-					continue;
-				}
-					noteWindow[i].setImage(currentNoteDrawable);
-					noteWindow[i].setImageDown(emptyTest);
-					noteWindow[i].setyPercentage((height*rowHeightPercentage*tempNote.getPitch())+y);
-					noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
-					if (tempNote.getPitch() > 5) {
-						noteWindow[i].drawImageDown();
-					} else {
-						noteWindow[i].drawOriginalImage();
-					}
-				}
-			} else {
-				noteWindow[i].resetImage();
-			}*/
 		}
-		
-		/*int currentNoteLength = noteButtonHandler.getSelectedButton().getNoteLength();
-		Drawable currentNoteDrawable = skin.getDrawable(this.FULL_NOTE);
-		Drawable emptyTest = skin.getDrawable("empty-stem-down");
-		if (currentNoteLength < 2)
-			currentNoteDrawable = skin.getDrawable(this.EMPTY_NOTE);
-		
-		for (int i = 0; i < noteWindow.length; i++) {
-			If noteList is not shorter then sum of values
-			if (i + currentColumnPosition < noteList.size()) {
-				Note tempNote = noteList.get(i + currentColumnPosition);
-				if (tempNote != null) {
-					noteWindow[i].setImage(currentNoteDrawable);
-					noteWindow[i].setImageDown(emptyTest);
-					noteWindow[i].setyPercentage((height*rowHeightPercentage*tempNote.getPitch())+y);
-					noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
-					if (tempNote.getPitch() > 5) {
-						noteWindow[i].drawImageDown();
-					} else {
-						noteWindow[i].drawOriginalImage();
-					}
-				}
-			} else {
-				noteWindow[i].resetImage();
-			}
-		}*/
 	}
 	
 	/**
@@ -195,7 +148,6 @@ public class Stave extends WidgetGroup {
 	
 	public void addNote(int index, Note note) {
 		noteList.add(index, note);
-		updateNoteWindow();
 	}
 	
 	private void handleStaveTouch(Stave stave, float x, float y) {
