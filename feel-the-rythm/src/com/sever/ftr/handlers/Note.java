@@ -10,6 +10,7 @@ public class Note {
 	
 	private int pitch;
 	private int name;
+
 	private String type; // Look at NoteButtonHandler constants
 	
 	public Note(int name, int pitch, String type) {
@@ -28,6 +29,10 @@ public class Note {
 
 	public int getName() {
 		return name;
+	}
+	
+	public void setName(int name) {
+		this.name = name;
 	}
 
 	public void setType(String type) {

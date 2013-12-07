@@ -14,8 +14,8 @@ public class Stave extends WidgetGroup {
 
 	private static final int NUMBER_OF_COLUMNS = 5;
 	private static final int NUMBER_OF_ROWS = 11;
-	private static final String EMPTY_STEM = "empty-stem";
-	private static final String EMPTY_STEM_DOWN = "empty-stem-down";
+	private static final String[] NOTE_DRAWABLE_STRINGS = {"empty-stem", "empty-stem", "full-stem", "stem-flag", "stem-doubleflag"};
+	private static final String[] NOTE_DRAWABLE_DOWN_STRINGS = {"empty-stem-down", "empty-stem-down", "full-stem-down", "stem-flag-down", "stem-doubleflag-down"};
 	
 	private static final float STEM_NOTE_SIZE_PERCENTAGE = 0.7f;
 	private static final float FRONT_PADDING = 0.6f; // paddign for first shown note
@@ -91,36 +91,39 @@ public class Stave extends WidgetGroup {
 	public void updateNoteWindow() {
 		for (int i = 0; i < noteWindow.length; i++) {
 			/*If noteList is not shorter then sum of values*/
-			if (i + currentColumnPosition < noteList.size()) {
-
-				Note currentNote = noteList.get(i + currentColumnPosition);
-				if (currentNote != null) {
-					/* Determine which note to display */
-					if (currentNote.getType().equals(NoteButtonHandler.PAUSE)){
-						noteWindow[i].resetImage();
-						return;
-					} else {
-						noteWindow[i].setImage(skin.getDrawable(Stave.EMPTY_STEM));
-						noteWindow[i].setImageDown(skin.getDrawable(Stave.EMPTY_STEM_DOWN));
-						noteWindow[i].setHeightPercentage(height * STEM_NOTE_SIZE_PERCENTAGE);
-						
-						float yPercentage = (height*rowHeightPercentage*currentNote.getPitch())+y;
-						if (currentNote.getPitch() > 5) {
-							yPercentage += (height*rowHeightPercentage);
-							noteWindow[i].setOrigin(ResizableImage.TOP_CENTER);
-							noteWindow[i].drawImageDown();
-						} else {
-							yPercentage -= (height*rowHeightPercentage);
-							noteWindow[i].setOrigin(ResizableImage.BOTTOM_CENTER);
-							noteWindow[i].drawOriginalImage();
-						}
-
-						noteWindow[i].setyPercentage(yPercentage);
-						noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
-					}
-				}
-			} else {
+			if (i + currentColumnPosition >= noteList.size()) {
 				noteWindow[i].resetImage();
+				continue;
+			}
+
+			Note currentNote = noteList.get(i + currentColumnPosition);
+			if (currentNote == null) {
+				continue;
+			}
+			
+			/* Determine which note to display */
+			if (currentNote.getType().equals(NoteButtonHandler.PAUSE)){
+				noteWindow[i].resetImage();
+				return;
+			} else {
+				System.out.println(currentNote.getName());
+				noteWindow[i].setImage(skin.getDrawable(NOTE_DRAWABLE_STRINGS[currentNote.getName()]));
+				noteWindow[i].setImageDown(skin.getDrawable(NOTE_DRAWABLE_DOWN_STRINGS[currentNote.getName()]));
+				noteWindow[i].setHeightPercentage(height * STEM_NOTE_SIZE_PERCENTAGE);
+				
+				float yPercentage = (height*rowHeightPercentage*currentNote.getPitch())+y;
+				if (currentNote.getPitch() > 5) {
+					yPercentage += (height*rowHeightPercentage);
+					noteWindow[i].setOrigin(ResizableImage.TOP_CENTER);
+					noteWindow[i].drawImageDown();
+				} else {
+					yPercentage -= (height*rowHeightPercentage);
+					noteWindow[i].setOrigin(ResizableImage.BOTTOM_CENTER);
+					noteWindow[i].drawOriginalImage();
+				}
+
+				noteWindow[i].setyPercentage(yPercentage);
+				noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
 			}
 			
 			/* If noteList is not shorter then sum of values */
@@ -198,7 +201,8 @@ public class Stave extends WidgetGroup {
 	private void handleStaveTouch(Stave stave, float x, float y) {
 		float widthPx = stave.width * Gdx.graphics.getWidth();
 		float xPx = stave.x * Gdx.graphics.getWidth();
-		int horizontalIndex = Math.round((((x - xPx) / widthPx)/columnWidthPercentage) + FRONT_PADDING) - 1;
+		xPx -= xPx*FRONT_PADDING*columnWidthPercentage*2; // TODO make this better :)
+		int horizontalIndex = Math.round((((x - xPx) / widthPx)/(columnWidthPercentage))) - 1;
 		if (horizontalIndex < 0) {
 			horizontalIndex = 0;
 		}
@@ -215,11 +219,12 @@ public class Stave extends WidgetGroup {
 		/* Add note or edit note */
 		String noteType = noteButtonHandler.getNoteType();
 		if (horizontalIndex + currentColumnPosition >= noteList.size()) {
-			addNote(noteList.size(), new Note(Note.SEMIBREVE, verticalIndex, noteType));
+			addNote(noteList.size(), new Note(noteButtonHandler.getSelectedButton().getNoteLength(), verticalIndex, noteType));
 		} else {
 			Note currentNote = noteList.get(horizontalIndex + currentColumnPosition);
 			currentNote.setPitch(verticalIndex);
 			currentNote.setType(noteType);
+			currentNote.setName(noteButtonHandler.getSelectedButton().getNoteLength());
 		}
 		updateNoteWindow();
 	}
