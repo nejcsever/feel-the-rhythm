@@ -216,7 +216,7 @@ public class Stave extends WidgetGroup {
 	    			case Note.SEMIQUAVER: noteLength /= 4; break;
 	    		}
 	    		if (note.getType().equals(NoteButtonHandler.PAUSE)) {
-	    			myTrack.insertNote(0, NOTE_PITCH[0], 0, durationSum, noteLength); // velocity: volume
+	    			myTrack.insertNote(0, 0, 0, durationSum, noteLength); // velocity: volume
 	    		} else {	    			
 	    			myTrack.insertNote(0, NOTE_PITCH[note.getPitch()], 120, durationSum, noteLength); // velocity: volume
 	    		}
