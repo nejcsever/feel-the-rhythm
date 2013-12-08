@@ -2,8 +2,8 @@ package com.sever.ftr;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.sever.ftr.midi.DesktopMidiPlayer;
-import com.sever.ftr.midi.MidiPlayer;
+import com.sever.ftr.interfaces.DesktopMidiPlayer;
+import com.sever.ftr.interfaces.MidiPlayer;
 
 public class Main {
 	public static void main(String[] args) {

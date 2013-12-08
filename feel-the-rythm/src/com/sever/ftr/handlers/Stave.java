@@ -191,7 +191,6 @@ public class Stave extends WidgetGroup {
 	}
 
 	public void generateMidi() {
-		MidiFile mf;
 		try {
 			MidiFile myFile = new MidiFile();
 			MidiTrack myTrack = new MidiTrack();
