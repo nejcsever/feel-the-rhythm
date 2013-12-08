@@ -22,6 +22,10 @@ public class Stave extends WidgetGroup {
 	private static final int NUMBER_OF_ROWS = 11;
 	private static final String[] NOTE_DRAWABLE_STRINGS = {"full-note", "empty-stem", "full-stem", "stem-flag", "stem-doubleflag"};
 	private static final String[] NOTE_DRAWABLE_DOWN_STRINGS = {"full-note-down", "empty-stem-down", "full-stem-down", "stem-flag-down", "stem-doubleflag-down"};
+	private static final String[] PAUSE_DRAWABLE_STRINGS = {"full-rest", "full-rest", "quarter-rest", "eighth-rest", "sixteenth-rest"};
+	private static final float[] PAUSE_DRAWABLE_SIZES = {0.1f, 0.1f, 0.7f, 0.35f, 0.52f};
+	private static final float[] PAUSE_DRAWABLE_POSITIONS = {0.725f, 0.54f, 0.55f, 0.35f, 0.165f};
+	private static final int[] PAUSE_DRAWABLE_ORIGINS = {ResizableImage.TOP_CENTER, ResizableImage.BOTTOM_CENTER, ResizableImage.CENTER_CENTER, ResizableImage.BOTTOM_CENTER, ResizableImage.BOTTOM_CENTER};
 	
 	private static final float STEM_NOTE_SIZE_PERCENTAGE = 0.7f;
 	private static final float FRONT_PADDING = 0.6f; // paddign for first shown note
@@ -112,8 +116,12 @@ public class Stave extends WidgetGroup {
 			
 			/* Determine which note to display */
 			if (currentNote.getType().equals(NoteButtonHandler.PAUSE)){
-				noteWindow[i].resetImage();
-				return;
+				noteWindow[i].setImage(skin.getDrawable(PAUSE_DRAWABLE_STRINGS[currentNote.getName()]));
+				noteWindow[i].setHeightPercentage(height * PAUSE_DRAWABLE_SIZES[currentNote.getName()]);
+				noteWindow[i].setOrigin(PAUSE_DRAWABLE_ORIGINS[currentNote.getName()]);
+				noteWindow[i].setyPercentage(height*PAUSE_DRAWABLE_POSITIONS[currentNote.getName()] + y);
+				noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
+				noteWindow[i].drawOriginalImage();
 			} else {
 				noteWindow[i].setImage(skin.getDrawable(NOTE_DRAWABLE_STRINGS[currentNote.getName()]));
 				noteWindow[i].setImageDown(skin.getDrawable(NOTE_DRAWABLE_DOWN_STRINGS[currentNote.getName()]));
@@ -207,31 +215,13 @@ public class Stave extends WidgetGroup {
 	    			case Note.QUAVER: noteLength /= 2; break;
 	    			case Note.SEMIQUAVER: noteLength /= 4; break;
 	    		}
-	    		myTrack.insertNote(0, NOTE_PITCH[note.getPitch()], 120, durationSum, noteLength); // velocity: volume
+	    		if (note.getType().equals(NoteButtonHandler.PAUSE)) {
+	    			myTrack.insertNote(0, NOTE_PITCH[0], 0, durationSum, noteLength); // velocity: volume
+	    		} else {	    			
+	    			myTrack.insertNote(0, NOTE_PITCH[note.getPitch()], 120, durationSum, noteLength); // velocity: volume
+	    		}
 	    		durationSum += noteLength;
 	    	}
-	    	/*for (int i = 0; i < NOTE_PITCH.length; i++) {
-	    		
-	    		myTrack.insertNote(0, NOTE_PITCH[i], 120, delay, duration);
-	    		delay += duration;
-	    	}*/
-	    	/*NoteOn no = new NoteOn(delay, 0, 60, 100);
-    		myTrack.insertEvent(no);
-    		NoteOff noff = new NoteOff(delay+duration, 0, 60, 100);
-    		myTrack.insertEvent(noff);
-    		
-    		NoteOn no1 = new NoteOn(duration + 1500, 0, 60, 100);
-    		myTrack.insertEvent(no1);
-    		NoteOff noff1 = new NoteOff(duration+duration+1500+duration, 0, 60, 100);
-    		myTrack.insertEvent(noff1);
-	    	/*for (int i : notes) {
-	    		NoteOn no = new NoteOn(delay, 0, i, 100);
-	    		myTrack.insertEvent(no);
-	    		NoteOff noff = new NoteOff(delay+duration, 0, i, 100);
-	    		myTrack.insertEvent(noff);
-	    		//myTrack.insertNote(0, i, 100, delay, duration);
-	    	    delay += duration;
-	    	}*/
 			myFile.addTrack(myTrack);
 			FileHandle fh = Gdx.files.external("feelTheRhythmSounds");
 			fh.mkdirs();

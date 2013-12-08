@@ -3,72 +3,79 @@ stave.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+full-rest
+  rotate: false
+  xy: 1, 805
+  size: 190, 60
+  orig: 190, 60
+  offset: 0, 0
+  index: -1
+eighth-rest
+  rotate: false
+  xy: 193, 615
+  size: 190, 250
+  orig: 190, 250
+  offset: 0, 0
+  index: -1
+sixteenth-rest
+  rotate: false
+  xy: 385, 495
+  size: 190, 370
+  orig: 190, 370
+  offset: 0, 0
+  index: -1
 empty-stem-down
   rotate: false
-  xy: 1, 403
+  xy: 577, 465
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 empty-stem
   rotate: false
-  xy: 193, 403
+  xy: 769, 465
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 full-note-down
   rotate: false
-  xy: 385, 403
+  xy: 1, 403
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 full-note
   rotate: false
-  xy: 577, 403
+  xy: 193, 213
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 full-stem-down
   rotate: false
-  xy: 769, 403
+  xy: 385, 93
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 full-stem
   rotate: false
-  xy: 1, 1
+  xy: 577, 63
+  size: 190, 400
+  orig: 190, 400
+  offset: 0, 0
+  index: -1
+quarter-rest
+  rotate: false
+  xy: 769, 63
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 stem-doubleflag-down
   rotate: false
-  xy: 193, 1
-  size: 190, 400
-  orig: 190, 400
-  offset: 0, 0
-  index: -1
-stem-doubleflag
-  rotate: false
-  xy: 385, 1
-  size: 190, 400
-  orig: 190, 400
-  offset: 0, 0
-  index: -1
-stem-flag-down
-  rotate: false
-  xy: 577, 1
-  size: 190, 400
-  orig: 190, 400
-  offset: 0, 0
-  index: -1
-stem-flag
-  rotate: false
-  xy: 769, 1
+  xy: 1, 1
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
@@ -80,8 +87,34 @@ filter: Linear,Linear
 repeat: none
 background
   rotate: false
-  xy: 1, 1
+  xy: 1, 168
   size: 685, 635
   orig: 685, 635
+  offset: 0, 0
+  index: -1
+stem-doubleflag
+  rotate: false
+  xy: 688, 403
+  size: 190, 400
+  orig: 190, 400
+  offset: 0, 0
+  index: -1
+stem-flag-down
+  rotate: false
+  xy: 688, 1
+  size: 190, 400
+  orig: 190, 400
+  offset: 0, 0
+  index: -1
+
+stave3.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+stem-flag
+  rotate: false
+  xy: 1, 1
+  size: 190, 400
+  orig: 190, 400
   offset: 0, 0
   index: -1
