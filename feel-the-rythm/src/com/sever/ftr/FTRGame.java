@@ -2,7 +2,7 @@ package com.sever.ftr;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.sever.ftr.midi.MidiPlayer;
+import com.sever.ftr.interfaces.MidiPlayer;
 import com.sever.ftr.screens.GameScreen;
 import com.sever.ftr.screens.MainMenu;
 

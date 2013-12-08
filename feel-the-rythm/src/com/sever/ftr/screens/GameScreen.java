@@ -102,6 +102,7 @@ public class GameScreen implements Screen {
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
+				stave.generateMidi();
 				game.switchScreen(FTRGame.MAIN_MENU_SCREEN);
 				super.clicked(event, x, y);
 	        }
@@ -161,7 +162,7 @@ public class GameScreen implements Screen {
 		
 		
 		// MIDI stuff
-		game.playMidi("sound/Vaja1.mid", false);
+		game.playMidi("sound/myMidi.mid", false);
 		/*MidiFile mf;
 		try {
 			mf = new MidiFile(Gdx.files.internal("sound/Vaja1.mid").read());
@@ -178,17 +179,31 @@ public class GameScreen implements Screen {
 		    t.setBpm(200);
 		    myTrack.insertEvent(t);
 	    	int delay = 0;
-	    	int duration = 1000; // ms
-	    	int[] notes = new int[]{60, 62, 64, 65, 67, 69, 71, 72};
-	    	for (int i : notes) {
+	    	int duration = 500; // ms
+	    	//int[] notes = new int[]{60, 62, 64, 65, 67, 69, 71, 72};
+	    	int[] notes = new int[]{60, 62, 64, 62, 60, 60, 62, 72};
+	    	for (int i = 0; i < notes.length; i++) {
+	    		myTrack.insertNote(0, notes[i], 100, delay, duration);
+	    		delay += duration;
+	    	}
+	    	/*NoteOn no = new NoteOn(delay, 0, 60, 100);
+    		myTrack.insertEvent(no);
+    		NoteOff noff = new NoteOff(delay+duration, 0, 60, 100);
+    		myTrack.insertEvent(noff);
+    		
+    		NoteOn no1 = new NoteOn(duration + 1500, 0, 60, 100);
+    		myTrack.insertEvent(no1);
+    		NoteOff noff1 = new NoteOff(duration+duration+1500+duration, 0, 60, 100);
+    		myTrack.insertEvent(noff1);
+	    	/*for (int i : notes) {
 	    		NoteOn no = new NoteOn(delay, 0, i, 100);
 	    		myTrack.insertEvent(no);
-	    		NoteOff noff = new NoteOff(0, 0, i, 100);
+	    		NoteOff noff = new NoteOff(delay+duration, 0, i, 100);
 	    		myTrack.insertEvent(noff);
 	    		//myTrack.insertNote(0, i, 100, delay, duration);
 	    	    delay += duration;
-	    	}
-			myFile.addTrack(myTrack);
+	    	}*/
+			/*myFile.addTrack(myTrack);
 			FileHandle fh = Gdx.files.external("feelTheRhythmSounds");
 			fh.mkdirs();
 			fh = Gdx.files.external("feelTheRhythmSounds/myMidi.mid");
@@ -196,6 +211,7 @@ public class GameScreen implements Screen {
 				fh.delete();
 			}
 			fh.file().createNewFile();
+			System.out.println(fh.file().getAbsolutePath().toString());
 			myFile.writeToFile(fh.file());
 			System.out.print(myTrack.getEvents().toString());
 		} catch (FileNotFoundException e) {

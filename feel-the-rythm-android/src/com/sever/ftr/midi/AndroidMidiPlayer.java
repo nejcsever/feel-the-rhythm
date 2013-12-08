@@ -3,7 +3,7 @@ package com.sever.ftr.midi;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.sever.ftr.midi.MidiPlayer;
+import com.sever.ftr.interfaces.MidiPlayer;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;

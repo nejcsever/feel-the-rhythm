@@ -1,14 +1,20 @@
 package com.sever.ftr.handlers;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.leff.midi.MidiFile;
+import com.leff.midi.MidiTrack;
+import com.leff.midi.event.meta.Tempo;
 
 public class Stave extends WidgetGroup {
 
@@ -19,6 +25,9 @@ public class Stave extends WidgetGroup {
 	
 	private static final float STEM_NOTE_SIZE_PERCENTAGE = 0.7f;
 	private static final float FRONT_PADDING = 0.6f; // paddign for first shown note
+	
+	/* Note pitch: C D E F G A H C D E F G */
+	private static final int[] NOTE_PITCH = new int[]{60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79};
 	
 	/* Stave position on the screen in percentage */
 	private float x;
@@ -179,5 +188,66 @@ public class Stave extends WidgetGroup {
 			currentNote.setName(noteButtonHandler.getSelectedButton().getNoteLength());
 		}
 		updateNoteWindow();
+	}
+
+	public void generateMidi() {
+		MidiFile mf;
+		try {
+			MidiFile myFile = new MidiFile();
+			MidiTrack myTrack = new MidiTrack();
+			Tempo t = new Tempo();
+		    t.setBpm(120);
+		    myTrack.insertEvent(t);
+	    	int durationSum = 0;
+	    	int period = Math.round(60000 / t.getBpm()); // BPM to ms
+	    	for (Note note : noteList) {
+	    		int noteLength = period; // crochet
+	    		switch (note.getName()) {
+	    			case Note.SEMIBREVE: noteLength *= 4; break;
+	    			case Note.MINIM: noteLength *= 2; break;
+	    			case Note.QUAVER: noteLength /= 2; break;
+	    			case Note.SEMIQUAVER: noteLength /= 4; break;
+	    		}
+	    		myTrack.insertNote(0, NOTE_PITCH[note.getPitch()], 120, durationSum, noteLength); // velocity: volume
+	    		durationSum += noteLength;
+	    	}
+	    	/*for (int i = 0; i < NOTE_PITCH.length; i++) {
+	    		
+	    		myTrack.insertNote(0, NOTE_PITCH[i], 120, delay, duration);
+	    		delay += duration;
+	    	}*/
+	    	/*NoteOn no = new NoteOn(delay, 0, 60, 100);
+    		myTrack.insertEvent(no);
+    		NoteOff noff = new NoteOff(delay+duration, 0, 60, 100);
+    		myTrack.insertEvent(noff);
+    		
+    		NoteOn no1 = new NoteOn(duration + 1500, 0, 60, 100);
+    		myTrack.insertEvent(no1);
+    		NoteOff noff1 = new NoteOff(duration+duration+1500+duration, 0, 60, 100);
+    		myTrack.insertEvent(noff1);
+	    	/*for (int i : notes) {
+	    		NoteOn no = new NoteOn(delay, 0, i, 100);
+	    		myTrack.insertEvent(no);
+	    		NoteOff noff = new NoteOff(delay+duration, 0, i, 100);
+	    		myTrack.insertEvent(noff);
+	    		//myTrack.insertNote(0, i, 100, delay, duration);
+	    	    delay += duration;
+	    	}*/
+			myFile.addTrack(myTrack);
+			FileHandle fh = Gdx.files.external("feelTheRhythmSounds");
+			fh.mkdirs();
+			fh = Gdx.files.external("feelTheRhythmSounds/myMidi.mid");
+			if (fh.exists()) {
+				fh.delete();
+			}
+			fh.file().createNewFile();
+			System.out.println(fh.file().getAbsolutePath().toString());
+			myFile.writeToFile(fh.file());
+			System.out.print(myTrack.getEvents().toString());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

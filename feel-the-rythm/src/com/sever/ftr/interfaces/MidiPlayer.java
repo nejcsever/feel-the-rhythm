@@ -1,4 +1,4 @@
-package com.sever.ftr.midi;
+package com.sever.ftr.interfaces;
 
 public interface MidiPlayer {
     public void open(String fileName);
