@@ -1,10 +1,12 @@
 Feel the Rhythm
 ===============
 
-Feel the Rhythm is a game that will upgrade your musical skills.
+Feel the Rhythm is a game that will upgrade your musical skills. Main goal is to compose notes on musical stave by playing the MIDI sound. It will be possible to compose your own exercises and much more.
 
-Main goal is to compose notes on musical stave by playing the MIDI sound.
+*Feel the Rhythm is a project for E-learning course at Faculty of Computer and Information Science, Ljubljana.
 
-It will be possible to compose your own exercises and much more.
 
-Start playing and FEEL THE RHYTHM! :)
+
+_Start playing and **FEEL THE RHYTHM!**_ :)
+
+_Copyright © 2013 Nejc Sever_
