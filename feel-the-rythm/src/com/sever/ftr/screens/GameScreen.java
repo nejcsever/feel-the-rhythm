@@ -1,5 +1,8 @@
 package com.sever.ftr.screens;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
@@ -15,6 +18,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.leff.midi.MidiFile;
+import com.leff.midi.MidiTrack;
+import com.leff.midi.event.MidiEvent;
+import com.leff.midi.event.NoteOn;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.handlers.NoteButtonHandler;
 import com.sever.ftr.handlers.ResizableImage;
@@ -159,66 +166,8 @@ public class GameScreen implements Screen {
 		
 		Gdx.input.setInputProcessor(stage);
 		
-		
-		
 		// MIDI stuff
 		game.playMidi("sound/myMidi.mid", false);
-		/*MidiFile mf;
-		try {
-			mf = new MidiFile(Gdx.files.internal("sound/Vaja1.mid").read());
-			MidiTrack mt = mf.getTracks().get(1);
-			System.out.println(mt.getEvents().toString());
-			System.out.println("************************");
-			mf = new MidiFile(Gdx.files.internal("sound/Vaja2.mid").read());
-			mt = mf.getTracks().get(1);
-			System.out.println(mt.getEvents().toString());
-			System.out.println("************************");
-			MidiFile myFile = new MidiFile();
-			MidiTrack myTrack = new MidiTrack();
-			Tempo t = new Tempo();
-		    t.setBpm(200);
-		    myTrack.insertEvent(t);
-	    	int delay = 0;
-	    	int duration = 500; // ms
-	    	//int[] notes = new int[]{60, 62, 64, 65, 67, 69, 71, 72};
-	    	int[] notes = new int[]{60, 62, 64, 62, 60, 60, 62, 72};
-	    	for (int i = 0; i < notes.length; i++) {
-	    		myTrack.insertNote(0, notes[i], 100, delay, duration);
-	    		delay += duration;
-	    	}
-	    	/*NoteOn no = new NoteOn(delay, 0, 60, 100);
-    		myTrack.insertEvent(no);
-    		NoteOff noff = new NoteOff(delay+duration, 0, 60, 100);
-    		myTrack.insertEvent(noff);
-    		
-    		NoteOn no1 = new NoteOn(duration + 1500, 0, 60, 100);
-    		myTrack.insertEvent(no1);
-    		NoteOff noff1 = new NoteOff(duration+duration+1500+duration, 0, 60, 100);
-    		myTrack.insertEvent(noff1);
-	    	/*for (int i : notes) {
-	    		NoteOn no = new NoteOn(delay, 0, i, 100);
-	    		myTrack.insertEvent(no);
-	    		NoteOff noff = new NoteOff(delay+duration, 0, i, 100);
-	    		myTrack.insertEvent(noff);
-	    		//myTrack.insertNote(0, i, 100, delay, duration);
-	    	    delay += duration;
-	    	}*/
-			/*myFile.addTrack(myTrack);
-			FileHandle fh = Gdx.files.external("feelTheRhythmSounds");
-			fh.mkdirs();
-			fh = Gdx.files.external("feelTheRhythmSounds/myMidi.mid");
-			if (fh.exists()) {
-				fh.delete();
-			}
-			fh.file().createNewFile();
-			System.out.println(fh.file().getAbsolutePath().toString());
-			myFile.writeToFile(fh.file());
-			System.out.print(myTrack.getEvents().toString());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 	}
 
 	@Override

@@ -2,20 +2,23 @@ package com.sever.ftr.handlers;
 
 public class Note {
 
+	/* Note pitch: C D E F G A H C D E F G */
+	public static final Integer[] NOTE_PITCH = {60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79};
+
 	public static final int SEMIBREVE = 0;
 	public static final int MINIM = 1;
 	public static final int CROCHET = 2;
 	public static final int QUAVER = 3;
 	public static final int SEMIQUAVER = 4;
 	
-	private int pitch;
-	private int name;
+	private int pitch; // index of NOTE_PITCH array
+	private int length;
 
 	private String type; // Look at NoteButtonHandler constants
 	
-	public Note(int name, int pitch, String type) {
+	public Note(int length, int pitch, String type) {
 		this.pitch = pitch;
-		this.name = name;
+		this.length = length;
 		this.type = type;
 	}
 	
@@ -27,12 +30,12 @@ public class Note {
 		return pitch;
 	}
 
-	public int getName() {
-		return name;
+	public int getLength() {
+		return length;
 	}
 	
-	public void setName(int name) {
-		this.name = name;
+	public void setLength(int length) {
+		this.length = length;
 	}
 
 	public void setType(String type) {

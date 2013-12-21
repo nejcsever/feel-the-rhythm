@@ -3,6 +3,8 @@ package com.sever.ftr.handlers;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -14,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.leff.midi.MidiFile;
 import com.leff.midi.MidiTrack;
+import com.leff.midi.event.MidiEvent;
+import com.leff.midi.event.NoteOn;
 import com.leff.midi.event.meta.Tempo;
 
 public class Stave extends WidgetGroup {
@@ -29,9 +33,6 @@ public class Stave extends WidgetGroup {
 	
 	private static final float STEM_NOTE_SIZE_PERCENTAGE = 0.7f;
 	private static final float FRONT_PADDING = 0.6f; // paddign for first shown note
-	
-	/* Note pitch: C D E F G A H C D E F G */
-	private static final int[] NOTE_PITCH = new int[]{60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79};
 	
 	/* Stave position on the screen in percentage */
 	private float x;
@@ -49,6 +50,8 @@ public class Stave extends WidgetGroup {
 	private NoteButtonHandler noteButtonHandler;
 	/* Contains list of all notes in stave */
 	private ArrayList<Note> noteList;
+	/* List of notes from MIDI file */
+	private ArrayList<Note> solutionList;
 	/* Contains ResizableImage's for notes that are currently visible. */
 	private ResizableImage[] noteWindow;
 	
@@ -76,6 +79,11 @@ public class Stave extends WidgetGroup {
 			noteWindow[i] = new ResizableImage(0f, ResizableImage.TOP_CENTER);
 			this.addActor(noteWindow[i]);
 		}
+
+		/* Generate result */
+		solutionList = getNotesFromMidi("sounds/myMidi.mid");
+		noteList.add(solutionList.get(0));
+		updateNoteWindow();
 		
 		this.addListener(new ClickListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -86,6 +94,47 @@ public class Stave extends WidgetGroup {
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
+	}
+	
+	/**
+	 * Retuns list of notes which are generated from MIDI. MIDI must be compatible with game (made from the game editor).
+	 */
+	public ArrayList<Note> getNotesFromMidi(String filePath) {
+		ArrayList<Note> result = new ArrayList<Note>();
+		MidiFile mf;
+		try {
+			mf = new MidiFile(Gdx.files.internal("sound/myMidi.mid").read());
+			MidiTrack mt = mf.getTracks().get(0); // There's only one track gy default
+			
+			float bpm = ((Tempo) mt.getEvents().first()).getBpm(); // First event is always TEMPO! Default in generateMidi method.
+			List<Integer> pitchList = Arrays.asList(Note.NOTE_PITCH);
+			for(MidiEvent me : mt.getEvents()) {
+				if (!(me instanceof NoteOn))
+					continue;
+				NoteOn noteEvent = ((NoteOn) me);
+				if (noteEvent.getDelta() == 0) // Skip notes that present end of previous note
+					continue;
+				int period = Math.round(60000 / bpm) / 4; // BPM to ms divided by 4 - presents SEMIQUAVER(1/16)
+				
+				int currentNoteLength = 0;
+				switch ((int)noteEvent.getDelta() / period) {
+	    			case 16: currentNoteLength = Note.SEMIBREVE; break;
+	    			case 8: currentNoteLength = Note.MINIM; break;
+	    			case 2: currentNoteLength = Note.QUAVER; break;
+	    			case 1: currentNoteLength = Note.SEMIQUAVER; break;
+				}
+				String currentNoteType = NoteButtonHandler.NOTE;
+				if (noteEvent.getNoteValue() == 0)
+					currentNoteType = NoteButtonHandler.PAUSE;
+
+				result.add(new Note(currentNoteLength, pitchList.indexOf(noteEvent.getNoteValue()), currentNoteType));
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	/**
@@ -116,15 +165,15 @@ public class Stave extends WidgetGroup {
 			
 			/* Determine which note to display */
 			if (currentNote.getType().equals(NoteButtonHandler.PAUSE)){
-				noteWindow[i].setImage(skin.getDrawable(PAUSE_DRAWABLE_STRINGS[currentNote.getName()]));
-				noteWindow[i].setHeightPercentage(height * PAUSE_DRAWABLE_SIZES[currentNote.getName()]);
-				noteWindow[i].setOrigin(PAUSE_DRAWABLE_ORIGINS[currentNote.getName()]);
-				noteWindow[i].setyPercentage(height*PAUSE_DRAWABLE_POSITIONS[currentNote.getName()] + y);
+				noteWindow[i].setImage(skin.getDrawable(PAUSE_DRAWABLE_STRINGS[currentNote.getLength()]));
+				noteWindow[i].setHeightPercentage(height * PAUSE_DRAWABLE_SIZES[currentNote.getLength()]);
+				noteWindow[i].setOrigin(PAUSE_DRAWABLE_ORIGINS[currentNote.getLength()]);
+				noteWindow[i].setyPercentage(height*PAUSE_DRAWABLE_POSITIONS[currentNote.getLength()] + y);
 				noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
 				noteWindow[i].drawOriginalImage();
 			} else {
-				noteWindow[i].setImage(skin.getDrawable(NOTE_DRAWABLE_STRINGS[currentNote.getName()]));
-				noteWindow[i].setImageDown(skin.getDrawable(NOTE_DRAWABLE_DOWN_STRINGS[currentNote.getName()]));
+				noteWindow[i].setImage(skin.getDrawable(NOTE_DRAWABLE_STRINGS[currentNote.getLength()]));
+				noteWindow[i].setImageDown(skin.getDrawable(NOTE_DRAWABLE_DOWN_STRINGS[currentNote.getLength()]));
 				noteWindow[i].setHeightPercentage(height * STEM_NOTE_SIZE_PERCENTAGE);
 				
 				float yPercentage = (height*rowHeightPercentage*currentNote.getPitch())+y;
@@ -193,9 +242,13 @@ public class Stave extends WidgetGroup {
 			Note currentNote = noteList.get(horizontalIndex + currentColumnPosition);
 			currentNote.setPitch(verticalIndex);
 			currentNote.setType(noteType);
-			currentNote.setName(noteButtonHandler.getSelectedButton().getNoteLength());
+			currentNote.setLength(noteButtonHandler.getSelectedButton().getNoteLength());
 		}
 		updateNoteWindow();
+	}
+	
+	public void generateNotes() {
+		
 	}
 
 	public void generateMidi() {
@@ -209,7 +262,7 @@ public class Stave extends WidgetGroup {
 	    	int period = Math.round(60000 / t.getBpm()); // BPM to ms
 	    	for (Note note : noteList) {
 	    		int noteLength = period; // crochet
-	    		switch (note.getName()) {
+	    		switch (note.getLength()) {
 	    			case Note.SEMIBREVE: noteLength *= 4; break;
 	    			case Note.MINIM: noteLength *= 2; break;
 	    			case Note.QUAVER: noteLength /= 2; break;
@@ -218,7 +271,7 @@ public class Stave extends WidgetGroup {
 	    		if (note.getType().equals(NoteButtonHandler.PAUSE)) {
 	    			myTrack.insertNote(0, 0, 0, durationSum, noteLength); // velocity: volume
 	    		} else {	    			
-	    			myTrack.insertNote(0, NOTE_PITCH[note.getPitch()], 120, durationSum, noteLength); // velocity: volume
+	    			myTrack.insertNote(0, Note.NOTE_PITCH[note.getPitch()], 120, durationSum, noteLength); // velocity: volume
 	    		}
 	    		durationSum += noteLength;
 	    	}
