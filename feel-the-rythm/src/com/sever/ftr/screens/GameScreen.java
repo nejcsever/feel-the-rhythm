@@ -2,7 +2,6 @@ package com.sever.ftr.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -17,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
+import com.sever.ftr.GameState;
+import com.sever.ftr.handlers.MidiNoteConverter;
 import com.sever.ftr.handlers.NoteButtonHandler;
 import com.sever.ftr.handlers.ResizableImage;
 import com.sever.ftr.handlers.Stave;
@@ -44,7 +45,6 @@ public class GameScreen implements Screen {
 	ResizableImage replayButton;
 	ResizableImage leftArrowButton;
 	ResizableImage rightArrowButton;
-	private String currentMidiPath;
 	
 	Image stoveBg;
 	
@@ -104,7 +104,7 @@ public class GameScreen implements Screen {
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				stave.generateMidi();
+				MidiNoteConverter.saveMidi(stave.getNoteList(), FTRGame.LEVELS_DIR_PATH + "/myLevel.mid", MidiNoteConverter.LOCAL_STORAGE);
 				game.switchScreen(FTRGame.LEVEL_SELECT_SCREEN);
 				super.clicked(event, x, y);
 	        }
@@ -115,7 +115,7 @@ public class GameScreen implements Screen {
 		replayButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				game.replayMidi(currentMidiPath);
+				game.replayMidi(game.getGameState().getCurrentMidiPath());
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -127,6 +127,7 @@ public class GameScreen implements Screen {
 		
 		/* Stave */
 		stave = new Stave(0.25f, 0.35f, 0.50f, 0.65f, noteButtonHandler);
+		stave.addNote(0, game.getGameState().getSolution().get(0)); // set first note of solution
 		stage.addActor(stave);
 		stage.addActor(noteButtonHandler);
 		// Stave movement
@@ -152,7 +153,6 @@ public class GameScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 			}
 	    });
-
 		
 		stage.addActor(doneButton);
 		stage.addActor(replayButton);
@@ -162,12 +162,15 @@ public class GameScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		
 		// MIDI stuff
-		FileHandle dirHandle = Gdx.files.local("levels");
+		GameState gameState = game.getGameState();
+		game.playMidi(gameState.getCurrentMidiPath(), false);
+		/*FileHandle dirHandle = Gdx.files.internal(FTRGame.LEVELS_DIR_PATH);
 		FileHandle[] files = dirHandle.list();
 		if (files.length != 0) {
 			currentMidiPath = dirHandle.list()[files.length - 1].toString();
 			game.playMidi(currentMidiPath, false);
-		}
+			System.out.println(currentMidiPath);
+		}*/
 		/*for (FileHandle file: dirHandle.list()) {
 		}*/
 		//game.playMidi("sounds/markoSkace.mid", false);

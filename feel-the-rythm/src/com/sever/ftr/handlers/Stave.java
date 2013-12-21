@@ -1,24 +1,14 @@
 package com.sever.ftr.handlers;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.leff.midi.MidiFile;
-import com.leff.midi.MidiTrack;
-import com.leff.midi.event.MidiEvent;
-import com.leff.midi.event.NoteOn;
-import com.leff.midi.event.meta.Tempo;
 
 public class Stave extends WidgetGroup {
 
@@ -50,8 +40,6 @@ public class Stave extends WidgetGroup {
 	private NoteButtonHandler noteButtonHandler;
 	/* Contains list of all notes in stave */
 	private ArrayList<Note> noteList;
-	/* List of notes from MIDI file */
-	private ArrayList<Note> solutionList;
 	/* Contains ResizableImage's for notes that are currently visible. */
 	private ResizableImage[] noteWindow;
 	
@@ -78,11 +66,6 @@ public class Stave extends WidgetGroup {
 			this.addActor(noteWindow[i]);
 		}
 
-		/* Generate result */
-		solutionList = generateNotesFromMidi("levels/markoSkace.mid");
-		noteList.add(solutionList.get(0));
-		updateNoteWindow();
-		
 		this.addListener(new ClickListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				handleStaveTouch(((Stave)event.getListenerActor()), x, y);
@@ -171,6 +154,17 @@ public class Stave extends WidgetGroup {
 	
 	public void addNote(int index, Note note) {
 		noteList.add(index, note);
+		updateNoteWindow();
+	}
+	
+	/**
+	 * Changes properties of Note object and updates stave screen.
+	 */
+	public void updateNote(Note note, int pitch, String noteType, int noteLength) {
+		note.setPitch(pitch);
+		note.setType(noteType);
+		note.setLength(noteLength);
+		updateNoteWindow();
 	}
 	
 	private void handleStaveTouch(Stave stave, float x, float y) {
@@ -196,96 +190,11 @@ public class Stave extends WidgetGroup {
 		if (horizontalIndex + currentColumnPosition >= noteList.size()) {
 			addNote(noteList.size(), new Note(noteButtonHandler.getSelectedButton().getNoteLength(), verticalIndex, noteType));
 		} else {
-			Note currentNote = noteList.get(horizontalIndex + currentColumnPosition);
-			currentNote.setPitch(verticalIndex);
-			currentNote.setType(noteType);
-			currentNote.setLength(noteButtonHandler.getSelectedButton().getNoteLength());
+			updateNote(noteList.get(horizontalIndex + currentColumnPosition), verticalIndex, noteType, noteButtonHandler.getSelectedButton().getNoteLength());
 		}
-		updateNoteWindow();
-	}
-	
-	
-	/**
-	 * Retuns list of notes which are generated from MIDI. MIDI must be compatible with game (made from the game editor).
-	 */
-	public ArrayList<Note> generateNotesFromMidi(String filePath) {
-		ArrayList<Note> result = new ArrayList<Note>();
-		MidiFile mf;
-		try {
-			mf = new MidiFile(Gdx.files.internal(filePath).read());
-			MidiTrack mt = mf.getTracks().get(0); // There's only one track by default
-			
-			float bpm = ((Tempo) mt.getEvents().first()).getBpm(); // First event is always TEMPO! Default in generateMidi method.
-			List<Integer> pitchList = Arrays.asList(Note.NOTE_PITCH);
-			for(MidiEvent me : mt.getEvents()) {
-				if (!(me instanceof NoteOn))
-					continue;
-				NoteOn noteEvent = ((NoteOn) me);
-				if (noteEvent.getDelta() == 0) // Skip notes that present end of previous note
-					continue;
-				int period = Math.round(60000 / bpm) / 4; // BPM to ms divided by 4 - presents SEMIQUAVER(1/16)
-				
-				int currentNoteLength = 0;
-				switch ((int)noteEvent.getDelta() / period) {
-	    			case 16: currentNoteLength = Note.SEMIBREVE; break;
-	    			case 8: currentNoteLength = Note.MINIM; break;
-	    			case 2: currentNoteLength = Note.QUAVER; break;
-	    			case 1: currentNoteLength = Note.SEMIQUAVER; break;
-				}
-				String currentNoteType = NoteButtonHandler.NOTE;
-				if (noteEvent.getNoteValue() == 0)
-					currentNoteType = NoteButtonHandler.PAUSE;
-
-				result.add(new Note(currentNoteLength, pitchList.indexOf(noteEvent.getNoteValue()), currentNoteType));
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
 
-	public void generateMidi() {
-		try {
-			MidiFile myFile = new MidiFile();
-			MidiTrack myTrack = new MidiTrack();
-			Tempo t = new Tempo();
-		    t.setBpm(120);
-		    myTrack.insertEvent(t);
-	    	int durationSum = 0;
-	    	int period = Math.round(60000 / t.getBpm()); // BPM to ms
-	    	for (Note note : noteList) {
-	    		int noteLength = period; // crochet
-	    		switch (note.getLength()) {
-	    			case Note.SEMIBREVE: noteLength *= 4; break;
-	    			case Note.MINIM: noteLength *= 2; break;
-	    			case Note.QUAVER: noteLength /= 2; break;
-	    			case Note.SEMIQUAVER: noteLength /= 4; break;
-	    		}
-	    		if (note.getType().equals(NoteButtonHandler.PAUSE)) {
-	    			myTrack.insertNote(0, 0, 0, durationSum, noteLength); // velocity: volume
-	    		} else {	    			
-	    			myTrack.insertNote(0, Note.NOTE_PITCH[note.getPitch()], 120, durationSum, noteLength); // velocity: volume
-	    		}
-	    		durationSum += noteLength;
-	    	}
-			myFile.addTrack(myTrack);
-			
-			//TODO temp file handle
-			FileHandle fh = Gdx.files.local("levels");
-			fh = Gdx.files.local("levels/myLevel" + fh.list().length + ".mid");
-			fh.mkdirs();
-			if (fh.exists()) {
-				fh.delete();
-			}
-			fh.file().createNewFile();
-			System.out.println("(Stave.java) File saved in: " + fh.file().getAbsolutePath().toString());
-			myFile.writeToFile(fh.file());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public ArrayList<Note> getNoteList() {
+		return noteList;
 	}
 }

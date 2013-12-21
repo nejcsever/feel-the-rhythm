@@ -1,0 +1,13 @@
+
+levelselect.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+level-button
+  rotate: false
+  xy: 2, 2
+  size: 10, 10
+  split: 2, 2, 2, 2
+  orig: 10, 10
+  offset: 0, 0
+  index: -1

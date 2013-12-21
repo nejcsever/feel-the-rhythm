@@ -1,19 +1,19 @@
 package com.sever.ftr.midi;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 
 import com.sever.ftr.interfaces.MidiPlayer;
 
 public class AndroidMidiPlayer implements MidiPlayer {
 
-    private MediaPlayer mediaPlayer;
+	private MediaPlayer mediaPlayer;
     private Context context;
     private boolean looping;
     private float volume;
@@ -26,19 +26,37 @@ public class AndroidMidiPlayer implements MidiPlayer {
         this.volume = 1;
     }
 
-    public void open(String fileName) {
-
+    public void open(String fileName, boolean fromAssets) {
         reset();
-        try {
-        	File f = new File(fileName);
-            mediaPlayer.setDataSource(new FileInputStream(f).getFD());
-            mediaPlayer.prepare();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (fromAssets) {
+            try {
+                AssetFileDescriptor afd = context.getAssets().openFd(fileName);
+                mediaPlayer.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+                mediaPlayer.prepare();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+        	FileInputStream is = null;
+            try {
+            	File f = new File(fileName);
+            	is = new FileInputStream(f);
+                mediaPlayer.setDataSource(is.getFD());
+                mediaPlayer.prepare();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+    			try {
+    				is.close();
+    			} catch (Exception e) {
+    				// is null anyway
+    			}
+            }
         }
-
     }
 
     //TODO: This should probably be replaced with something better.

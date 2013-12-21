@@ -84,7 +84,7 @@ public class MainMenu implements Screen {
 			public void clicked (InputEvent event, float x, float y)
 	        {
 				super.clicked(event, x, y);
-				game.switchScreen(FTRGame.GAME_SCREEN);
+				game.switchScreen(FTRGame.LEVEL_SELECT_SCREEN);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				playButton.drawImageDown();

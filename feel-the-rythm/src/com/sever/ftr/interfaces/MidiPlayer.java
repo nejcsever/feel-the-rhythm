@@ -1,7 +1,7 @@
 package com.sever.ftr.interfaces;
 
 public interface MidiPlayer {
-    public void open(String fileName);
+    public void open(String fileName, boolean fromAssets);
     public boolean isLooping();
     public void setLooping(boolean loop);
     public void play();

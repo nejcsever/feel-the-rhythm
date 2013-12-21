@@ -2,6 +2,7 @@ package com.sever.ftr;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.sever.ftr.handlers.MidiNoteConverter;
 import com.sever.ftr.interfaces.MidiPlayer;
 import com.sever.ftr.screens.GameScreen;
 import com.sever.ftr.screens.LevelSelectScreen;
@@ -14,11 +15,16 @@ public class FTRGame extends Game {
 	public static final String MAIN_MENU_SCREEN = "mainMenuScreen";
 	public static final String LEVEL_SELECT_SCREEN = "levelSelectScreen";
 	
+	public static final String LEVELS_DIR_PATH = "levels";
+	
 	/* List of game screens */
 	private Screen mainMenuScreen;
 	private Screen gameScreen;
 	private Screen levelSelectScreen;
 	
+	/* Game state (current midi, solution,...) */
+	private GameState gameState;
+
 	private MidiPlayer midiPlayer;
 	
 	public FTRGame(MidiPlayer midiPlayer) {
@@ -27,6 +33,7 @@ public class FTRGame extends Game {
 	
 	@Override
 	public void create() {
+		gameState = new GameState();
 		mainMenuScreen = new MainMenu(this);
 		this.setScreen(mainMenuScreen);
 	}
@@ -66,7 +73,7 @@ public class FTRGame extends Game {
 	public void playMidi(String source, boolean looping) {
 		midiPlayer.setLooping(looping);
         midiPlayer.setVolume(100f);
-        midiPlayer.open(source);
+        midiPlayer.open(source, gameState.getStorageType().equals(MidiNoteConverter.INTERNAL_STORAGE));
         midiPlayer.play();
 	}
 	
@@ -97,5 +104,9 @@ public class FTRGame extends Game {
 		if (screenName.equals(MAIN_MENU_SCREEN)) {
 			this.setScreen(mainMenuScreen);
 		}
+	}
+	
+	public GameState getGameState() {
+		return gameState;
 	}
 }
