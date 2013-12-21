@@ -65,8 +65,6 @@ public class Stave extends WidgetGroup {
 		atlas = new TextureAtlas(Gdx.files.internal("textures/stave.pack"));
 		skin = new Skin(atlas);
 		
-		System.out.println(height+y);
-		
 		background = new Image(skin.getDrawable("background"));
 		this.addActor(background);
 		
@@ -81,7 +79,7 @@ public class Stave extends WidgetGroup {
 		}
 
 		/* Generate result */
-		solutionList = getNotesFromMidi("sounds/myMidi.mid");
+		solutionList = generateNotesFromMidi("levels/markoSkace.mid");
 		noteList.add(solutionList.get(0));
 		updateNoteWindow();
 		
@@ -94,47 +92,6 @@ public class Stave extends WidgetGroup {
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
-	}
-	
-	/**
-	 * Retuns list of notes which are generated from MIDI. MIDI must be compatible with game (made from the game editor).
-	 */
-	public ArrayList<Note> getNotesFromMidi(String filePath) {
-		ArrayList<Note> result = new ArrayList<Note>();
-		MidiFile mf;
-		try {
-			mf = new MidiFile(Gdx.files.internal("sound/myMidi.mid").read());
-			MidiTrack mt = mf.getTracks().get(0); // There's only one track gy default
-			
-			float bpm = ((Tempo) mt.getEvents().first()).getBpm(); // First event is always TEMPO! Default in generateMidi method.
-			List<Integer> pitchList = Arrays.asList(Note.NOTE_PITCH);
-			for(MidiEvent me : mt.getEvents()) {
-				if (!(me instanceof NoteOn))
-					continue;
-				NoteOn noteEvent = ((NoteOn) me);
-				if (noteEvent.getDelta() == 0) // Skip notes that present end of previous note
-					continue;
-				int period = Math.round(60000 / bpm) / 4; // BPM to ms divided by 4 - presents SEMIQUAVER(1/16)
-				
-				int currentNoteLength = 0;
-				switch ((int)noteEvent.getDelta() / period) {
-	    			case 16: currentNoteLength = Note.SEMIBREVE; break;
-	    			case 8: currentNoteLength = Note.MINIM; break;
-	    			case 2: currentNoteLength = Note.QUAVER; break;
-	    			case 1: currentNoteLength = Note.SEMIQUAVER; break;
-				}
-				String currentNoteType = NoteButtonHandler.NOTE;
-				if (noteEvent.getNoteValue() == 0)
-					currentNoteType = NoteButtonHandler.PAUSE;
-
-				result.add(new Note(currentNoteLength, pitchList.indexOf(noteEvent.getNoteValue()), currentNoteType));
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
 	
 	/**
@@ -247,8 +204,46 @@ public class Stave extends WidgetGroup {
 		updateNoteWindow();
 	}
 	
-	public void generateNotes() {
-		
+	
+	/**
+	 * Retuns list of notes which are generated from MIDI. MIDI must be compatible with game (made from the game editor).
+	 */
+	public ArrayList<Note> generateNotesFromMidi(String filePath) {
+		ArrayList<Note> result = new ArrayList<Note>();
+		MidiFile mf;
+		try {
+			mf = new MidiFile(Gdx.files.internal(filePath).read());
+			MidiTrack mt = mf.getTracks().get(0); // There's only one track by default
+			
+			float bpm = ((Tempo) mt.getEvents().first()).getBpm(); // First event is always TEMPO! Default in generateMidi method.
+			List<Integer> pitchList = Arrays.asList(Note.NOTE_PITCH);
+			for(MidiEvent me : mt.getEvents()) {
+				if (!(me instanceof NoteOn))
+					continue;
+				NoteOn noteEvent = ((NoteOn) me);
+				if (noteEvent.getDelta() == 0) // Skip notes that present end of previous note
+					continue;
+				int period = Math.round(60000 / bpm) / 4; // BPM to ms divided by 4 - presents SEMIQUAVER(1/16)
+				
+				int currentNoteLength = 0;
+				switch ((int)noteEvent.getDelta() / period) {
+	    			case 16: currentNoteLength = Note.SEMIBREVE; break;
+	    			case 8: currentNoteLength = Note.MINIM; break;
+	    			case 2: currentNoteLength = Note.QUAVER; break;
+	    			case 1: currentNoteLength = Note.SEMIQUAVER; break;
+				}
+				String currentNoteType = NoteButtonHandler.NOTE;
+				if (noteEvent.getNoteValue() == 0)
+					currentNoteType = NoteButtonHandler.PAUSE;
+
+				result.add(new Note(currentNoteLength, pitchList.indexOf(noteEvent.getNoteValue()), currentNoteType));
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	public void generateMidi() {
@@ -276,16 +271,17 @@ public class Stave extends WidgetGroup {
 	    		durationSum += noteLength;
 	    	}
 			myFile.addTrack(myTrack);
-			FileHandle fh = Gdx.files.external("feelTheRhythmSounds");
+			
+			//TODO temp file handle
+			FileHandle fh = Gdx.files.local("levels");
+			fh = Gdx.files.local("levels/myLevel" + fh.list().length + ".mid");
 			fh.mkdirs();
-			fh = Gdx.files.external("feelTheRhythmSounds/myMidi.mid");
 			if (fh.exists()) {
 				fh.delete();
 			}
 			fh.file().createNewFile();
-			System.out.println(fh.file().getAbsolutePath().toString());
+			System.out.println("(Stave.java) File saved in: " + fh.file().getAbsolutePath().toString());
 			myFile.writeToFile(fh.file());
-			System.out.print(myTrack.getEvents().toString());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

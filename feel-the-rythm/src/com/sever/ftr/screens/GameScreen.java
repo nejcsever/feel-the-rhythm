@@ -1,10 +1,8 @@
 package com.sever.ftr.screens;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -18,10 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.leff.midi.MidiFile;
-import com.leff.midi.MidiTrack;
-import com.leff.midi.event.MidiEvent;
-import com.leff.midi.event.NoteOn;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.handlers.NoteButtonHandler;
 import com.sever.ftr.handlers.ResizableImage;
@@ -50,6 +44,7 @@ public class GameScreen implements Screen {
 	ResizableImage replayButton;
 	ResizableImage leftArrowButton;
 	ResizableImage rightArrowButton;
+	private String currentMidiPath;
 	
 	Image stoveBg;
 	
@@ -110,7 +105,7 @@ public class GameScreen implements Screen {
 			public void clicked (InputEvent event, float x, float y)
 	        {
 				stave.generateMidi();
-				game.switchScreen(FTRGame.MAIN_MENU_SCREEN);
+				game.switchScreen(FTRGame.LEVEL_SELECT_SCREEN);
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -120,7 +115,7 @@ public class GameScreen implements Screen {
 		replayButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				game.replayMidi("sound/Vaja1.mid");
+				game.replayMidi(currentMidiPath);
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -167,7 +162,15 @@ public class GameScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		
 		// MIDI stuff
-		game.playMidi("sound/myMidi.mid", false);
+		FileHandle dirHandle = Gdx.files.local("levels");
+		FileHandle[] files = dirHandle.list();
+		if (files.length != 0) {
+			currentMidiPath = dirHandle.list()[files.length - 1].toString();
+			game.playMidi(currentMidiPath, false);
+		}
+		/*for (FileHandle file: dirHandle.list()) {
+		}*/
+		//game.playMidi("sounds/markoSkace.mid", false);
 	}
 
 	@Override

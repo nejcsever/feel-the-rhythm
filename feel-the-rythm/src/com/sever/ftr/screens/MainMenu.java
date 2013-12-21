@@ -87,7 +87,6 @@ public class MainMenu implements Screen {
 				game.switchScreen(FTRGame.GAME_SCREEN);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("PLAY BUTTON: " + x + ", " + y);
 				playButton.drawImageDown();
 				return super.touchDown(event, x, y, pointer, button);
 			}
@@ -104,7 +103,6 @@ public class MainMenu implements Screen {
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("SETTINGS BUTTON: " + x + ", " + y);
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });
@@ -116,7 +114,6 @@ public class MainMenu implements Screen {
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				System.out.println("ABOUT BUTTON: " + x + ", " + y);
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });

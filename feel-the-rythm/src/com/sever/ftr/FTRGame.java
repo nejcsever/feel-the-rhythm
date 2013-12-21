@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.sever.ftr.interfaces.MidiPlayer;
 import com.sever.ftr.screens.GameScreen;
+import com.sever.ftr.screens.LevelSelectScreen;
 import com.sever.ftr.screens.MainMenu;
 
 public class FTRGame extends Game {
@@ -11,10 +12,12 @@ public class FTRGame extends Game {
 	/* Screen names */
 	public static final String GAME_SCREEN = "gameScreen";
 	public static final String MAIN_MENU_SCREEN = "mainMenuScreen";
+	public static final String LEVEL_SELECT_SCREEN = "levelSelectScreen";
 	
 	/* List of game screens */
 	private Screen mainMenuScreen;
 	private Screen gameScreen;
+	private Screen levelSelectScreen;
 	
 	private MidiPlayer midiPlayer;
 	
@@ -31,8 +34,12 @@ public class FTRGame extends Game {
 	@Override
 	public void dispose() {
 		super.dispose();
-		midiPlayer.stop();
-		midiPlayer.release();
+		try {
+			midiPlayer.stop();
+			midiPlayer.release();
+		} catch (Exception e) {
+			// No sequencer opened
+		}
 	}
 
 	@Override
@@ -81,6 +88,11 @@ public class FTRGame extends Game {
 			if (gameScreen == null)
 				gameScreen = new GameScreen(this);
 			this.setScreen(gameScreen);
+		}
+		if (screenName.equals(LEVEL_SELECT_SCREEN)) {
+			if (levelSelectScreen == null)
+				levelSelectScreen = new LevelSelectScreen(this);
+			this.setScreen(levelSelectScreen);
 		}
 		if (screenName.equals(MAIN_MENU_SCREEN)) {
 			this.setScreen(mainMenuScreen);

@@ -1,13 +1,15 @@
 package com.sever.ftr.midi;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.sever.ftr.interfaces.MidiPlayer;
-
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
+
+import com.sever.ftr.interfaces.MidiPlayer;
 
 public class AndroidMidiPlayer implements MidiPlayer {
 
@@ -27,10 +29,9 @@ public class AndroidMidiPlayer implements MidiPlayer {
     public void open(String fileName) {
 
         reset();
-
         try {
-            AssetFileDescriptor afd = context.getAssets().openFd(fileName);
-            mediaPlayer.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+        	File f = new File(fileName);
+            mediaPlayer.setDataSource(new FileInputStream(f).getFD());
             mediaPlayer.prepare();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
