@@ -85,6 +85,9 @@ public class LevelSelectScreen implements Screen {
 		/* Show buttons for levels */
 		// internal files
 		FileHandle dirHandle = Gdx.files.internal(FTRGame.LEVELS_DIR_PATH);
+		if (Gdx.app.getType() == ApplicationType.Desktop) {
+		  dirHandle = Gdx.files.internal("./bin/" + FTRGame.LEVELS_DIR_PATH);
+		}
 		table.add(new Label("Internal files: ", new LabelStyle(new BitmapFont(), Color.BLACK))).pad(10);
 		for (FileHandle file: dirHandle.list()) {
 			table.row();

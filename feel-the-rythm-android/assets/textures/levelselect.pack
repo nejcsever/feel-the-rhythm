@@ -7,7 +7,7 @@ level-button
   rotate: false
   xy: 2, 2
   size: 10, 10
-  split: 2, 2, 2, 2
+  split: 3, 3, 3, 3
   orig: 10, 10
   offset: 0, 0
   index: -1

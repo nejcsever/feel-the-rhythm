@@ -24,8 +24,7 @@ public class DesktopMidiPlayer implements MidiPlayer {
 
     }
 
-    public void open(String fileName) {
-
+    public void open(String fileName, boolean fromAssets) {
         FileHandle file = Gdx.files.internal(fileName);
         try {
             sequence = MidiSystem.getSequence(file.read());
