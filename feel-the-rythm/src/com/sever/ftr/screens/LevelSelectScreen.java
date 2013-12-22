@@ -26,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.handlers.MidiNoteConverter;
-import com.sever.ftr.handlers.ResizableImage;
 
 public class LevelSelectScreen implements Screen {
 

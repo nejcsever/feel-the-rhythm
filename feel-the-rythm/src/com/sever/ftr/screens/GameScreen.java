@@ -23,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.GameState;
-import com.sever.ftr.handlers.MidiNoteConverter;
 import com.sever.ftr.handlers.NoteButtonHandler;
 import com.sever.ftr.handlers.ResizableImage;
 import com.sever.ftr.handlers.Stave;
@@ -118,8 +117,11 @@ public class GameScreen implements Screen {
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				MidiNoteConverter.saveMidi(stave.getNoteList(), FTRGame.LEVELS_DIR_PATH + "/myLevel.mid", MidiNoteConverter.LOCAL_STORAGE);
-				game.switchScreen(FTRGame.LEVEL_SELECT_SCREEN);
+				//TODO TRANSFER THIS TO EDITOR !!!
+				// MidiNoteConverter.saveMidi(stave.getNoteList(), FTRGame.LEVELS_DIR_PATH + "/myLevel.mid", MidiNoteConverter.LOCAL_STORAGE);
+				/* Save users solution to gamestate and switch screen */
+				game.getGameState().setUsersSolution(stave.getNoteList());
+				game.switchScreen(FTRGame.SCORING_SCREEN);
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

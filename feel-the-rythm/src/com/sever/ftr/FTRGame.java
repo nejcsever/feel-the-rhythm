@@ -7,6 +7,7 @@ import com.sever.ftr.interfaces.MidiPlayer;
 import com.sever.ftr.screens.GameScreen;
 import com.sever.ftr.screens.LevelSelectScreen;
 import com.sever.ftr.screens.MainMenu;
+import com.sever.ftr.screens.ScoringScreen;
 
 public class FTRGame extends Game {
 	
@@ -14,6 +15,7 @@ public class FTRGame extends Game {
 	public static final String GAME_SCREEN = "gameScreen";
 	public static final String MAIN_MENU_SCREEN = "mainMenuScreen";
 	public static final String LEVEL_SELECT_SCREEN = "levelSelectScreen";
+	public static final String SCORING_SCREEN = "scoringScreen";
 	
 	public static final String LEVELS_DIR_PATH = "levels";
 	
@@ -21,6 +23,7 @@ public class FTRGame extends Game {
 	private Screen mainMenuScreen;
 	private Screen gameScreen;
 	private Screen levelSelectScreen;
+	private Screen scoringScreen;
 	
 	/* Game state (current midi, solution,...) */
 	private GameState gameState;
@@ -103,6 +106,11 @@ public class FTRGame extends Game {
 		}
 		if (screenName.equals(MAIN_MENU_SCREEN)) {
 			this.setScreen(mainMenuScreen);
+		}
+		if (screenName.equals(SCORING_SCREEN)) {
+			if (scoringScreen == null)
+				scoringScreen = new ScoringScreen(this);
+			this.setScreen(scoringScreen);
 		}
 	}
 	

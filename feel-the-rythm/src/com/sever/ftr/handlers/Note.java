@@ -1,6 +1,6 @@
 package com.sever.ftr.handlers;
 
-public class Note {
+public class Note implements Comparable<Note> {
 
 	/* Note pitch: C D E F G A H C D E F G */
 	public static final Integer[] NOTE_PITCH = {60, 62, 64, 65, 67, 69, 71, 72, 74, 76, 77, 79};
@@ -44,5 +44,24 @@ public class Note {
 
 	public String getType() {
 		return type;
+	}
+
+	@Override
+	public int compareTo(Note note) {
+		if (this.length < note.length) {
+			return -1;
+		} else if (this.length > note.length) {
+			return 1;
+		}
+		if (this.pitch < note.pitch) {
+			return -1;
+		} else if (this.pitch > note.pitch) {
+			return 1;
+		}
+		if (this.type.equals(note.type)) {
+			return 0;
+		}
+		
+		return -1;
 	}
 }
