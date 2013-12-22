@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.handlers.MidiNoteConverter;
@@ -45,6 +46,7 @@ public class LevelSelectScreen implements Screen {
 	
 	private BitmapFont titleFont;
 	private BitmapFont buttonFont;
+	private BitmapFont smallButtonFont;
 
 	public LevelSelectScreen(FTRGame game) {
 		this.game = game;
@@ -74,6 +76,7 @@ public class LevelSelectScreen implements Screen {
 	    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
 	    titleFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.1f));
 	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.05f));
+	    smallButtonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.03f));
 	    generator.dispose();
 		
 		/* Load background */
@@ -99,25 +102,30 @@ public class LevelSelectScreen implements Screen {
 		if (Gdx.app.getType() == ApplicationType.Desktop) {
 		  dirHandle = Gdx.files.internal("./bin/" + FTRGame.LEVELS_DIR_PATH);
 		}
-		TextButtonStyle tbs = new TextButtonStyle(skin.getDrawable("level-button"), skin.getDrawable("level-button"), skin.getDrawable("level-button"), buttonFont);
-		tbs.fontColor = Color.BLACK;
+		TextButtonStyle tbsWhite = new TextButtonStyle(skin.getDrawable("white-level-button"), skin.getDrawable("white-level-button-down"), skin.getDrawable("white-level-button-down"), buttonFont);
+		TextButtonStyle tbsGreen = new TextButtonStyle(skin.getDrawable("green-level-button"), skin.getDrawable("green-level-button-down"), skin.getDrawable("green-level-button-down"), buttonFont);
+		tbsWhite.fontColor = Color.BLACK;
+		tbsGreen.fontColor = Color.BLACK;
 		LabelStyle ls = new LabelStyle(titleFont, Color.BLACK);
-		table.add(new Label("Internal files: ", ls)).pad(10);
+		LabelStyle lsPerc = new LabelStyle(smallButtonFont, Color.BLACK);
+		lsPerc.fontColor = Color.GRAY;
+		// TODO MAKE IT PRETTIER!!!
+		table.add(new Label("Level selection", ls)).pad(10);
 		for (FileHandle file: dirHandle.list()) {
 			table.row();
-			TextButton tb = new TextButton(" " + file.name() + " ", tbs);
-			table.add(tb).center().top().pad(10).height((float) Gdx.graphics.getHeight() * 0.1f);
+			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
+			tb.align(Align.left);
+			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
+			table.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
 			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
 		}
 		dirHandle = Gdx.files.local(FTRGame.LEVELS_DIR_PATH);
 		// local files
 		if (Gdx.app.getType() == ApplicationType.Android && dirHandle.list().length != 0) {
-			table.row();
-			table.add(new Label("Local files: ", ls)).pad(10);
 			for (FileHandle file: dirHandle.list()) {
 				table.row();
-				TextButton tb = new TextButton(" " + file.name() + " ", tbs);
-				table.add(tb).center().top().pad(10).height((float) Gdx.graphics.getHeight() * 0.1f);
+				TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()), tbsGreen);
+				table.add(tb).center().top().pad(10).height((float) Gdx.graphics.getHeight() * 0.1f).width(Gdx.graphics.getWidth()*0.5f);
 				addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.LOCAL_STORAGE);
 			}
 		}
@@ -129,11 +137,9 @@ public class LevelSelectScreen implements Screen {
 			public void clicked (InputEvent event, float x, float y)
 	        {	
 				/* Update gamestate and switch screen */
-
-				System.out.println("LOCAL PATH: " + filePath);
 				game.getGameState().setCurrentMidiPath(filePath);
 				game.getGameState().setStorageType(storageType);
-				game.getGameState().setSongTitle("Todo title generation");
+				game.getGameState().setSongTitle(MidiNoteConverter.convertFileToTitle(fileName));
 				game.getGameState().setSolution(MidiNoteConverter.generateNotesFromMidi(FTRGame.LEVELS_DIR_PATH + "/" + fileName, storageType));
 				game.switchScreen(FTRGame.GAME_SCREEN);
 				super.clicked(event, x, y);
@@ -162,6 +168,7 @@ public class LevelSelectScreen implements Screen {
 		atlas.dispose();
 		titleFont.dispose();
 		buttonFont.dispose();
+		smallButtonFont.dispose();
 	}
 
 }

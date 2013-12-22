@@ -118,4 +118,23 @@ public class MidiNoteConverter {
 		}
 		return result;
 	}
+	
+	/**
+	 * Returns song name from MIDI file name. (Replace "_" with " " and remove .mid extension)
+	 */
+	public static String convertFileToTitle(String fileName) {
+		String result = fileName.replace(".mid", "");
+		result = result.replace("_", " ");
+		return result;
+	}
+	
+	/**
+	 * Returns MIDI file name from song name. (Replace " " with "_", trim and add .mid extension);
+	 */
+	public static String convertTitleToFile(String title) {
+		String result = title.trim().replaceAll(" +", " ");
+		result = result.replace(" ", "_");
+		result = result.concat(".mid");
+		return result;
+	}
 }
