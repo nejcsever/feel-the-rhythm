@@ -9,4 +9,4 @@ Feel the Rhythm is a game that will upgrade your musical skills. Main goal is to
 
 _Start playing and **FEEL THE RHYTHM!**_ :)
 
-_Copyright © 2013 Nejc Sever_
+_The content of this project is licensed under the [Creative Commons Attribution 3.0 license](http://creativecommons.org/licenses/by/3.0/)._
