@@ -143,7 +143,7 @@ public class GameScreen implements Screen {
 		
 		LabelStyle ls = new LabelStyle(titleFont, Color.BLACK);
 		songTitle = new Label(game.getGameState().getSongTitle(), ls); // title label
-		songTitle.setPosition(Gdx.graphics.getWidth()-songTitle.getWidth(), Gdx.graphics.getHeight() - songTitle.getHeight());
+		songTitle.setPosition(Gdx.graphics.getWidth()-songTitle.getWidth() - Gdx.graphics.getWidth() * 0.05f, Gdx.graphics.getHeight() - songTitle.getHeight());
 		
 		/* Stave */
 		stave = new Stave(0.25f, 0.35f, 0.50f, 0.65f, noteButtonHandler);

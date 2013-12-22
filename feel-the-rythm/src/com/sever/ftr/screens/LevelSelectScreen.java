@@ -115,15 +115,24 @@ public class LevelSelectScreen implements Screen {
 		tbsGreen.fontColor = Color.BLACK;
 		LabelStyle ls = new LabelStyle(titleFont, Color.BLACK);
 		LabelStyle lsPerc = new LabelStyle(smallButtonFont, Color.BLACK);
-		lsPerc.fontColor = Color.GRAY;
+		lsPerc.fontColor = Color.DARK_GRAY;
 		// TODO MAKE IT PRETTIER!!!
 		table.add(new Label("Level selection", ls)).pad(30);
+		TextButtonStyle tempBtnStyle = tbsWhite; // for green for 100% completed stages
 		for (FileHandle file: dirHandle.list()) {
 			levelsTable.row();
-			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
-			tb.align(Align.left);
 			int highScore = HighScore.readHighScore(file.path());
-			tb.add(new Label(((highScore < 0)? "No score yet": "High score: " + highScore + "%"), lsPerc)).center();
+			String labelText = (highScore < 0)? "No score yet": "High score: " + highScore + "%";
+			if (highScore == 100) {
+				tempBtnStyle = tbsGreen;
+				labelText = "LEVEL CLEARED";
+			} else {
+				tempBtnStyle = tbsWhite;
+			}
+			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tempBtnStyle);
+			tb.align(Align.left);
+			
+			tb.add(new Label(labelText, lsPerc)).center();
 			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
 			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
 		}
