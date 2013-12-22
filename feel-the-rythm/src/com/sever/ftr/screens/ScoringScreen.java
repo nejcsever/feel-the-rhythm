@@ -12,12 +12,17 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
+import com.sever.ftr.HighScore;
 import com.sever.ftr.handlers.ScoringHandler;
 
 public class ScoringScreen implements Screen {
@@ -91,7 +96,30 @@ public class ScoringScreen implements Screen {
 		LabelStyle ls = new LabelStyle(titleFont, Color.BLACK);
 		table.add(new Label("Your score:", ls)).pad(30);
 		table.row();
-		table.add(new Label(ScoringHandler.getScorePercentage(game.getGameState().getUsersSolution(), game.getGameState().getSolution()) + "%", ls)).pad(30);
+		int score = ScoringHandler.getScorePercentage(game.getGameState().getUsersSolution(), game.getGameState().getSolution());
+		HighScore.updateHighScore(game.getGameState().getCurrentMidiPath(), score);
+		
+		final TextButtonStyle tbsBack = new TextButtonStyle(null, null, null, buttonFont);
+		tbsBack.fontColor = Color.BLACK;
+		TextButton backButton = new TextButton("BACK", tbsBack);
+		backButton.addListener(new ClickListener() {
+			public void clicked (InputEvent event, float x, float y)
+	        {
+				game.switchScreen(FTRGame.MAIN_MENU_SCREEN);
+				super.clicked(event, x, y);
+	        }
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				tbsBack.fontColor = Color.GRAY;
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				tbsBack.fontColor = Color.BLACK;
+				super.touchUp(event, x, y, pointer, button);
+			}
+	    });
+		table.add(backButton).pad(40).fill();
+		
+		table.add(new Label(score + "%", ls)).pad(30);
 		stage.addActor(table);
 	}
 

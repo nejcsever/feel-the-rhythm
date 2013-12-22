@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
+import com.sever.ftr.HighScore;
 import com.sever.ftr.handlers.MidiNoteConverter;
 
 public class LevelSelectScreen implements Screen {
@@ -121,39 +122,8 @@ public class LevelSelectScreen implements Screen {
 			levelsTable.row();
 			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
 			tb.align(Align.left);
-			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
-			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
-			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
-		}
-		for (FileHandle file: dirHandle.list()) {
-			levelsTable.row();
-			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
-			tb.align(Align.left);
-			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
-			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
-			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
-		}
-		for (FileHandle file: dirHandle.list()) {
-			levelsTable.row();
-			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
-			tb.align(Align.left);
-			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
-			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
-			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
-		}
-		for (FileHandle file: dirHandle.list()) {
-			levelsTable.row();
-			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
-			tb.align(Align.left);
-			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
-			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
-			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
-		}
-		for (FileHandle file: dirHandle.list()) {
-			levelsTable.row();
-			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
-			tb.align(Align.left);
-			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
+			int highScore = HighScore.readHighScore(file.path());
+			tb.add(new Label(((highScore < 0)? "No score yet": "High score: " + highScore + "%"), lsPerc)).center();
 			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
 			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
 		}

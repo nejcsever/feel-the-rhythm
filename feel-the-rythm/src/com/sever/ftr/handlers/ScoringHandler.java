@@ -13,7 +13,6 @@ public class ScoringHandler {
 		
 		int minSize = usersSolSize;
 		
-		
 		if (usersSolSize > solSize) {
 			minSize = solSize;
 			int sub = usersSolSize - solSize;
