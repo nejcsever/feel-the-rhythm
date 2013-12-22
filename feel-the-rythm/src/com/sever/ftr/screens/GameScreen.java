@@ -2,16 +2,22 @@ package com.sever.ftr.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -39,6 +45,9 @@ public class GameScreen implements Screen {
 	private Texture backgroundTex;
 	
 	private NoteButtonHandler noteButtonHandler;
+	
+	private BitmapFont titleFont;
+	private Label songTitle;
 	
 	private Stave stave;
 	ResizableImage doneButton;
@@ -82,6 +91,11 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
+		/* Generate fonts */
+		FileHandle fontFile = Gdx.files.internal("fonts/Dosis-Light.ttf");
+	    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
+	    titleFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.1f));
+	    generator.dispose();
 		/* Load background */
 		backgroundTex = new Texture("textures/background.png");
 		backgroundTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -125,6 +139,10 @@ public class GameScreen implements Screen {
 		
 		noteButtonHandler = new NoteButtonHandler(skin); // Add note buttons to widgetGroup
 		
+		LabelStyle ls = new LabelStyle(titleFont, Color.BLACK);
+		songTitle = new Label(game.getGameState().getSongTitle(), ls); // title label
+		songTitle.setPosition(Gdx.graphics.getWidth()-songTitle.getWidth(), Gdx.graphics.getHeight() - songTitle.getHeight());
+		
 		/* Stave */
 		stave = new Stave(0.25f, 0.35f, 0.50f, 0.65f, noteButtonHandler);
 		stave.addNote(0, game.getGameState().getSolution().get(0)); // set first note of solution
@@ -158,6 +176,7 @@ public class GameScreen implements Screen {
 		stage.addActor(replayButton);
 		stage.addActor(leftArrowButton);
 		stage.addActor(rightArrowButton);
+		stage.addActor(songTitle);
 		
 		Gdx.input.setInputProcessor(stage);
 		
@@ -196,5 +215,6 @@ public class GameScreen implements Screen {
 		batch.dispose();
 		stage.dispose();
 		atlas.dispose();
+		titleFont.dispose();
 	}
 }

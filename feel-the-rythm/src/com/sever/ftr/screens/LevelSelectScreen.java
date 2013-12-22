@@ -69,13 +69,12 @@ public class LevelSelectScreen implements Screen {
 
 	@Override
 	public void show() {
-		//TODO FONTS!!
+		/* Generate fonts */
 	    FileHandle fontFile = Gdx.files.internal("fonts/Dosis-Light.ttf");
 	    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
 	    titleFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.1f));
 	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.05f));
 	    generator.dispose();
-		
 		
 		/* Load background */
 		backgroundTex = new Texture("textures/background.png");
@@ -134,6 +133,7 @@ public class LevelSelectScreen implements Screen {
 				System.out.println("LOCAL PATH: " + filePath);
 				game.getGameState().setCurrentMidiPath(filePath);
 				game.getGameState().setStorageType(storageType);
+				game.getGameState().setSongTitle("Todo title generation");
 				game.getGameState().setSolution(MidiNoteConverter.generateNotesFromMidi(FTRGame.LEVELS_DIR_PATH + "/" + fileName, storageType));
 				game.switchScreen(FTRGame.GAME_SCREEN);
 				super.clicked(event, x, y);

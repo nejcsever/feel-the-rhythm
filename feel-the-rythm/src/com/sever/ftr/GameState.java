@@ -14,6 +14,8 @@ public class GameState {
 	
 	private String storageType;
 	private String currentMidiPath;
+	private String songTitle;
+
 	private ArrayList<Note> solution;
 	private ArrayList<Note> usersSolution;
 	
@@ -50,5 +52,13 @@ public class GameState {
 
 	public void setUsersSolution(ArrayList<Note> usersSolution) {
 		this.usersSolution = usersSolution;
+	}
+	
+	public String getSongTitle() {
+		return songTitle;
+	}
+	
+	public void setSongTitle(String songTitle) {
+		this.songTitle = songTitle;
 	}
 }
