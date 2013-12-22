@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.handlers.MidiNoteConverter;
+import com.sever.ftr.handlers.ResizableImage;
 
 public class LevelSelectScreen implements Screen {
 
@@ -43,6 +45,9 @@ public class LevelSelectScreen implements Screen {
 	private Texture backgroundTex;
 	
 	private Table table;
+	
+	private ScrollPane scrollPane;
+	private Table levelsTable;
 	
 	private BitmapFont titleFont;
 	private BitmapFont buttonFont;
@@ -98,6 +103,8 @@ public class LevelSelectScreen implements Screen {
 
 		/* Show buttons for levels */
 		// internal files
+		levelsTable = new Table();
+		
 		FileHandle dirHandle = Gdx.files.internal(FTRGame.LEVELS_DIR_PATH);
 		if (Gdx.app.getType() == ApplicationType.Desktop) {
 		  dirHandle = Gdx.files.internal("./bin/" + FTRGame.LEVELS_DIR_PATH);
@@ -110,25 +117,80 @@ public class LevelSelectScreen implements Screen {
 		LabelStyle lsPerc = new LabelStyle(smallButtonFont, Color.BLACK);
 		lsPerc.fontColor = Color.GRAY;
 		// TODO MAKE IT PRETTIER!!!
-		table.add(new Label("Level selection", ls)).pad(10);
+		table.add(new Label("Level selection", ls)).pad(30);
 		for (FileHandle file: dirHandle.list()) {
-			table.row();
+			levelsTable.row();
 			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
 			tb.align(Align.left);
 			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
-			table.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
+			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
+			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
+		}
+		for (FileHandle file: dirHandle.list()) {
+			levelsTable.row();
+			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
+			tb.align(Align.left);
+			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
+			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
+			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
+		}
+		for (FileHandle file: dirHandle.list()) {
+			levelsTable.row();
+			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
+			tb.align(Align.left);
+			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
+			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
+			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
+		}
+		for (FileHandle file: dirHandle.list()) {
+			levelsTable.row();
+			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
+			tb.align(Align.left);
+			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
+			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
+			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
+		}
+		for (FileHandle file: dirHandle.list()) {
+			levelsTable.row();
+			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tbsWhite);
+			tb.align(Align.left);
+			tb.add(new Label("High score: " + Math.round((Math.random()*100 + 1)) + "%", lsPerc)).center();
+			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
 			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
 		}
 		dirHandle = Gdx.files.local(FTRGame.LEVELS_DIR_PATH);
 		// local files
 		if (Gdx.app.getType() == ApplicationType.Android && dirHandle.list().length != 0) {
 			for (FileHandle file: dirHandle.list()) {
-				table.row();
+				levelsTable.row();
 				TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()), tbsGreen);
-				table.add(tb).center().top().pad(10).height((float) Gdx.graphics.getHeight() * 0.1f).width(Gdx.graphics.getWidth()*0.5f);
+				levelsTable.add(tb).center().top().pad(10).height((float) Gdx.graphics.getHeight() * 0.1f).width(Gdx.graphics.getWidth()*0.5f);
 				addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.LOCAL_STORAGE);
 			}
 		}
+		scrollPane= new ScrollPane(levelsTable);
+		table.row();
+		table.add(scrollPane).center();
+		table.row();
+		final TextButtonStyle tbsBack = new TextButtonStyle(null, null, null, buttonFont);
+		tbsBack.fontColor = Color.BLACK;
+		TextButton backButton = new TextButton("BACK", tbsBack);
+		backButton.addListener(new ClickListener() {
+			public void clicked (InputEvent event, float x, float y)
+	        {
+				game.switchScreen(FTRGame.MAIN_MENU_SCREEN);
+				super.clicked(event, x, y);
+	        }
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				tbsBack.fontColor = Color.GRAY;
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				tbsBack.fontColor = Color.BLACK;
+				super.touchUp(event, x, y, pointer, button);
+			}
+	    });
+		table.add(backButton).pad(40).fill();
 		stage.addActor(table);
 	}
 
