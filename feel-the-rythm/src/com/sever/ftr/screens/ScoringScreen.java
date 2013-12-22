@@ -105,7 +105,7 @@ public class ScoringScreen implements Screen {
 		backButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				game.switchScreen(FTRGame.MAIN_MENU_SCREEN);
+				game.switchScreen(FTRGame.LEVEL_SELECT_SCREEN);
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -117,9 +117,9 @@ public class ScoringScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 			}
 	    });
-		table.add(backButton).pad(40).fill();
-		
 		table.add(new Label(score + "%", ls)).pad(30);
+		table.row();
+		table.add(backButton).pad(40).fill();
 		stage.addActor(table);
 	}
 
