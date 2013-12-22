@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -41,6 +42,9 @@ public class LevelSelectScreen implements Screen {
 	private Texture backgroundTex;
 	
 	private Table table;
+	
+	private BitmapFont titleFont;
+	private BitmapFont buttonFont;
 
 	public LevelSelectScreen(FTRGame game) {
 		this.game = game;
@@ -65,6 +69,14 @@ public class LevelSelectScreen implements Screen {
 
 	@Override
 	public void show() {
+		//TODO FONTS!!
+	    FileHandle fontFile = Gdx.files.internal("fonts/Dosis-Light.ttf");
+	    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
+	    titleFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.1f));
+	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.05f));
+	    generator.dispose();
+		
+		
 		/* Load background */
 		backgroundTex = new Texture("textures/background.png");
 		backgroundTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -88,10 +100,13 @@ public class LevelSelectScreen implements Screen {
 		if (Gdx.app.getType() == ApplicationType.Desktop) {
 		  dirHandle = Gdx.files.internal("./bin/" + FTRGame.LEVELS_DIR_PATH);
 		}
-		table.add(new Label("Internal files: ", new LabelStyle(new BitmapFont(), Color.BLACK))).pad(10);
+		TextButtonStyle tbs = new TextButtonStyle(skin.getDrawable("level-button"), skin.getDrawable("level-button"), skin.getDrawable("level-button"), buttonFont);
+		tbs.fontColor = Color.BLACK;
+		LabelStyle ls = new LabelStyle(titleFont, Color.BLACK);
+		table.add(new Label("Internal files: ", ls)).pad(10);
 		for (FileHandle file: dirHandle.list()) {
 			table.row();
-			TextButton tb = new TextButton(" " + file.name() + " ", new TextButtonStyle(skin.getDrawable("level-button"), skin.getDrawable("level-button"), skin.getDrawable("level-button"),new BitmapFont()));
+			TextButton tb = new TextButton(" " + file.name() + " ", tbs);
 			table.add(tb).center().top().pad(10).height((float) Gdx.graphics.getHeight() * 0.1f);
 			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
 		}
@@ -99,10 +114,10 @@ public class LevelSelectScreen implements Screen {
 		// local files
 		if (Gdx.app.getType() == ApplicationType.Android && dirHandle.list().length != 0) {
 			table.row();
-			table.add(new Label("Local files: ", new LabelStyle(new BitmapFont(), Color.BLACK))).pad(10);
+			table.add(new Label("Local files: ", ls)).pad(10);
 			for (FileHandle file: dirHandle.list()) {
 				table.row();
-				TextButton tb = new TextButton(" " + file.name() + " ", new TextButtonStyle(skin.getDrawable("level-button"), skin.getDrawable("level-button"), skin.getDrawable("level-button"),new BitmapFont()));
+				TextButton tb = new TextButton(" " + file.name() + " ", tbs);
 				table.add(tb).center().top().pad(10).height((float) Gdx.graphics.getHeight() * 0.1f);
 				addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.LOCAL_STORAGE);
 			}
@@ -145,6 +160,8 @@ public class LevelSelectScreen implements Screen {
 		batch.dispose();
 		stage.dispose();
 		atlas.dispose();
+		titleFont.dispose();
+		buttonFont.dispose();
 	}
 
 }
