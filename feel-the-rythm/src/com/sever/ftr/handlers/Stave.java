@@ -74,7 +74,7 @@ public class Stave extends WidgetGroup {
 
 		this.addListener(new ClickListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				/* Don't handle touch ifarrows are pressed. */
+				/* Don't handle touch if arrows are pressed. */
 				String targetName = event.getTarget().getName();
 				if (targetName == null || !(targetName.equals(LEFT_ARROW_NAME) || targetName.equals(RIGHT_ARROW_NAME))) {
 					handleStaveTouch(((Stave)event.getListenerActor()), x, y);
@@ -134,6 +134,19 @@ public class Stave extends WidgetGroup {
 	}
 	
 	public void updateNoteWindow() {
+		/* Update arrow buttons */
+		if (currentColumnPosition == 0) {
+			leftArrowButton.setVisible(false);
+		} else {
+			leftArrowButton.setVisible(true);
+		}
+		if (noteList.size() - currentColumnPosition < 2) {
+			rightArrowButton.setVisible(false);
+		} else {
+			rightArrowButton.setVisible(true);
+		}
+			
+		/* Update notes */
 		for (int i = 0; i < noteWindow.length; i++) {
 			/*If noteList is not shorter then sum of values*/
 			if (i + currentColumnPosition >= noteList.size()) {
