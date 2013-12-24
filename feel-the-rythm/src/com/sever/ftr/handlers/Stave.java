@@ -157,6 +157,14 @@ public class Stave extends WidgetGroup {
 		updateNoteWindow();
 	}
 	
+	public void removeNote(int index) {
+		if (noteList.size() <= index) {
+			return;
+		}
+		noteList.remove(index);
+		updateNoteWindow();
+	}
+	
 	/**
 	 * Changes properties of Note object and updates stave screen.
 	 */
@@ -187,7 +195,9 @@ public class Stave extends WidgetGroup {
 		
 		/* Add note or edit note */
 		String noteType = noteButtonHandler.getNoteType();
-		if (horizontalIndex + currentColumnPosition >= noteList.size()) {
+		if (noteButtonHandler.getNoteType().equals(NoteButtonHandler.REMOVE)){
+			removeNote(horizontalIndex + currentColumnPosition);
+		} else if (horizontalIndex + currentColumnPosition >= noteList.size()) {
 			addNote(noteList.size(), new Note(noteButtonHandler.getSelectedButton().getNoteLength(), verticalIndex, noteType));
 		} else {
 			updateNote(noteList.get(horizontalIndex + currentColumnPosition), verticalIndex, noteType, noteButtonHandler.getSelectedButton().getNoteLength());

@@ -5,147 +5,147 @@ filter: Linear,Linear
 repeat: none
 left-arrow-down
   rotate: false
-  xy: 2, 378
+  xy: 1, 371
   size: 150, 600
   orig: 150, 600
   offset: 0, 0
   index: -1
 left-arrow
   rotate: false
-  xy: 156, 378
+  xy: 153, 371
   size: 150, 600
   orig: 150, 600
   offset: 0, 0
   index: -1
 right-arrow-down
   rotate: false
-  xy: 310, 378
+  xy: 305, 371
   size: 150, 600
   orig: 150, 600
   offset: 0, 0
   index: -1
 right-arrow
   rotate: false
-  xy: 464, 378
+  xy: 457, 371
   size: 150, 600
   orig: 150, 600
   offset: 0, 0
   index: -1
 done-button
   rotate: false
-  xy: 2, 234
+  xy: 1, 229
   size: 106, 140
   orig: 106, 140
   offset: 0, 0
   index: -1
 replay-button-down
   rotate: false
-  xy: 618, 838
+  xy: 609, 831
   size: 106, 140
   orig: 106, 140
   offset: 0, 0
   index: -1
 replay-button
   rotate: false
-  xy: 2, 90
+  xy: 1, 87
   size: 106, 140
   orig: 106, 140
   offset: 0, 0
   index: -1
 crotchet-button-down
   rotate: false
-  xy: 112, 290
+  xy: 109, 285
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 crotchet-button
   rotate: false
-  xy: 618, 750
+  xy: 609, 745
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 dot-button-down
   rotate: false
-  xy: 728, 894
+  xy: 717, 887
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 dot-button
   rotate: false
-  xy: 2, 2
+  xy: 1, 1
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 minim-button-down
   rotate: false
-  xy: 112, 202
+  xy: 109, 199
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 minim-button
   rotate: false
-  xy: 200, 290
+  xy: 195, 285
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 pause-button-down
   rotate: false
-  xy: 618, 662
+  xy: 609, 659
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 pause-button
   rotate: false
-  xy: 816, 894
+  xy: 803, 887
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 quaver-button-down
   rotate: false
-  xy: 112, 114
+  xy: 109, 113
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 quaver-button
   rotate: false
-  xy: 200, 202
+  xy: 195, 199
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 semibreve-button-down
   rotate: false
-  xy: 288, 290
+  xy: 281, 285
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 semibreve-button
   rotate: false
-  xy: 618, 574
+  xy: 609, 573
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 semiquaver-button-down
   rotate: false
-  xy: 904, 894
+  xy: 889, 887
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
 semiquaver-button
   rotate: false
-  xy: 200, 114
+  xy: 195, 113
   size: 84, 84
   orig: 84, 84
   offset: 0, 0

@@ -7,18 +7,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class NoteButtonHandler extends WidgetGroup {
 	public static final String PAUSE = "pause";
-	public static final String DOT = "dot";
+	public static final String REMOVE = "remove";
 	public static final String NOTE = "note";
 	
 	private static NoteButton selectedButton;
 	private static String noteType = NOTE;
 	
 	public NoteButtonHandler(Skin skin) {
-		final ResizableImage pauseButton = new ResizableImage(skin.getDrawable("pause-button"), skin.getDrawable("pause-button-down"),0.325f, 0.05f, 0.15f, ResizableImage.BOTTOM_LEFT);
-		final ResizableImage dotButton = new ResizableImage(skin.getDrawable("dot-button"), skin.getDrawable("dot-button-down"),0.2f, 0.05f, 0.15f, ResizableImage.BOTTOM_LEFT);
+		final ResizableImage pauseButton = new ResizableImage(skin.getDrawable("pause-button"), skin.getDrawable("pause-button-down"),0.25f, 0.05f, 0.15f, ResizableImage.BOTTOM_LEFT);
+		final ResizableImage removeButton = new ResizableImage(skin.getDrawable("dot-button"), skin.getDrawable("dot-button-down"),0.4f, 0.05f, 0.15f, ResizableImage.BOTTOM_LEFT);
 		pauseButton.addListener(new ClickListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				dotButton.drawOriginalImage();
+				removeButton.drawOriginalImage();
 				pauseButton.toggleImage();
 				if (noteType == PAUSE) {
 					noteType = NOTE;
@@ -28,14 +28,14 @@ public class NoteButtonHandler extends WidgetGroup {
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });
-		dotButton.addListener(new ClickListener() {
+		removeButton.addListener(new ClickListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				pauseButton.drawOriginalImage();
-				dotButton.toggleImage();
-				if (noteType == DOT) {
+				removeButton.toggleImage();
+				if (noteType == REMOVE) {
 					noteType = NOTE;
 				} else {
-					noteType = DOT;
+					noteType = REMOVE;
 				}
 				return super.touchDown(event, x, y, pointer, button);
 			}
@@ -51,7 +51,7 @@ public class NoteButtonHandler extends WidgetGroup {
 		setSelectedButton(crotchetButton);
 		
 		this.addActor(pauseButton);
-		this.addActor(dotButton);
+		this.addActor(removeButton);
 		this.addActor(semibreveButton.image);
 		this.addActor(minimButton.image);
 		this.addActor(crotchetButton.image);
