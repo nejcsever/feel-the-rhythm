@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class Stave extends WidgetGroup {
 
-	private static final int NUMBER_OF_COLUMNS = 5;
-	private static final int NUMBER_OF_ROWS = 11;
+	public static final int NUMBER_OF_COLUMNS = 5;
+	public static final int NUMBER_OF_ROWS = 11;
 	private static final String[] NOTE_DRAWABLE_STRINGS = {"full-note", "empty-stem", "full-stem", "stem-flag", "stem-doubleflag"};
 	private static final String[] NOTE_DRAWABLE_DOWN_STRINGS = {"full-note-down", "empty-stem-down", "full-stem-down", "stem-flag-down", "stem-doubleflag-down"};
 	private static final String[] PAUSE_DRAWABLE_STRINGS = {"full-rest", "full-rest", "quarter-rest", "eighth-rest", "sixteenth-rest"};
@@ -23,9 +23,8 @@ public class Stave extends WidgetGroup {
 	
 	private static final float ARROW_PADDING = 0.02f;
 	private static final float STEM_NOTE_SIZE_PERCENTAGE = 0.7f;
-	private static final float FRONT_PADDING = 0.6f; // paddign for first shown note
-	private static final String LEFT_ARROW_NAME = "right-arrow";
-	private static final String RIGHT_ARROW_NAME = "left-arrow";
+	public static final String LEFT_ARROW_NAME = "right-arrow";
+	public static final String RIGHT_ARROW_NAME = "left-arrow";
 	
 	/* Stave position on the screen in percentage */
 	private float x;
@@ -49,12 +48,16 @@ public class Stave extends WidgetGroup {
 	private ResizableImage leftArrowButton;
 	private ResizableImage rightArrowButton;
 	
+
+	private float frontPadding = 0.6f; // paddign for first shown note
+	
 	public Stave(float x, float y, float height, float width, NoteButtonHandler noteButtonHandler) {
 		this.x = x;
 		this.y = y;
 		this.height = height;
 		this.width = width;
 		this.noteButtonHandler = noteButtonHandler;
+		this.frontPadding = 0.6f;
 		
 		atlas = new TextureAtlas(Gdx.files.internal("textures/stave.pack"));
 		skin = new Skin(atlas);
@@ -71,21 +74,8 @@ public class Stave extends WidgetGroup {
 			noteWindow[i] = new ResizableImage(0f, ResizableImage.TOP_CENTER);
 			this.addActor(noteWindow[i]);
 		}
-
-		this.addListener(new ClickListener() {
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				/* Don't handle touch if arrows are pressed. */
-				String targetName = event.getTarget().getName();
-				if (targetName == null || !(targetName.equals(LEFT_ARROW_NAME) || targetName.equals(RIGHT_ARROW_NAME))) {
-					handleStaveTouch(((Stave)event.getListenerActor()), x, y);
-				}
-					
-				return super.touchDown(event, x, y, pointer, button);
-			}
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				super.touchUp(event, x, y, pointer, button);
-			}
-		});
+		/* Drag listener */
+		this.addListener(new StaveDragListener(this));
 		
 		// Stave movement arrows
 		leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"), 0f + x - ARROW_PADDING * width, height*0.55f + y,  0.35f, ResizableImage.CENTER_RIGHT);
@@ -165,7 +155,7 @@ public class Stave extends WidgetGroup {
 				noteWindow[i].setHeightPercentage(height * PAUSE_DRAWABLE_SIZES[currentNote.getLength()]);
 				noteWindow[i].setOrigin(PAUSE_DRAWABLE_ORIGINS[currentNote.getLength()]);
 				noteWindow[i].setyPercentage(height*PAUSE_DRAWABLE_POSITIONS[currentNote.getLength()] + y);
-				noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
+				noteWindow[i].setxPercentage(x + width * (i+frontPadding)*columnWidthPercentage);
 				noteWindow[i].drawOriginalImage();
 			} else {
 				noteWindow[i].setImage(skin.getDrawable(NOTE_DRAWABLE_STRINGS[currentNote.getLength()]));
@@ -184,7 +174,7 @@ public class Stave extends WidgetGroup {
 				}
 
 				noteWindow[i].setyPercentage(yPercentage);
-				noteWindow[i].setxPercentage(x + width * (i+FRONT_PADDING)*columnWidthPercentage);
+				noteWindow[i].setxPercentage(x + width * (i+frontPadding)*columnWidthPercentage);
 			}
 		}
 	}
@@ -230,35 +220,6 @@ public class Stave extends WidgetGroup {
 		note.setLength(noteLength);
 		updateNoteWindow();
 	}
-	
-	private void handleStaveTouch(Stave stave, float x, float y) {
-		float widthPx = stave.width * Gdx.graphics.getWidth();
-		float xPx = stave.x * Gdx.graphics.getWidth();
-		xPx -= xPx*FRONT_PADDING*columnWidthPercentage*2; // TODO make this better :)
-		int horizontalIndex = Math.round((((x - xPx) / widthPx)/(columnWidthPercentage))) - 1;
-		if (horizontalIndex < 0) {
-			horizontalIndex = 0;
-		}
-		
-		float heightPx = stave.height * Gdx.graphics.getHeight();
-		float yPx = stave.y * Gdx.graphics.getHeight();
-		int verticalIndex = Math.round(((y - yPx) / heightPx)/rowHeightPercentage);
-		if (verticalIndex > NUMBER_OF_ROWS) {
-			verticalIndex = NUMBER_OF_ROWS;
-		} else if (verticalIndex < 0) { // this may happen if touch is recieved on note object and not from background so it must be disabled
-			verticalIndex = 0;
-		}
-		
-		/* Add note or edit note */
-		String noteType = noteButtonHandler.getNoteType();
-		if (noteButtonHandler.getNoteType().equals(NoteButtonHandler.REMOVE)){
-			removeNote(horizontalIndex + currentColumnPosition);
-		} else if (horizontalIndex + currentColumnPosition >= noteList.size()) {
-			addNote(noteList.size(), new Note(noteButtonHandler.getSelectedButton().getNoteLength(), verticalIndex, noteType));
-		} else {
-			updateNote(noteList.get(horizontalIndex + currentColumnPosition), verticalIndex, noteType, noteButtonHandler.getSelectedButton().getNoteLength());
-		}
-	}
 
 	public ArrayList<Note> getNoteList() {
 		return noteList;
@@ -267,5 +228,41 @@ public class Stave extends WidgetGroup {
 	public void dispose() {
 		atlas.dispose();
 		skin.dispose();
+	}
+	
+	public NoteButtonHandler getNoteButtonHandler() {
+		return noteButtonHandler;
+	}
+	
+	public float getFrontPadding() {
+		return frontPadding;
+	}
+	
+	public float getRowHeightPercentage() {
+		return rowHeightPercentage;
+	}
+	
+	public float getColumnWidthPercentage() {
+		return columnWidthPercentage;
+	}
+
+	public int getCurrentColumnPosition() {
+		return currentColumnPosition;
+	}
+	
+	public float getX() {
+		return x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public float getWidth() {
+		return width;
 	}
 }
