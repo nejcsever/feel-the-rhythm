@@ -11,9 +11,10 @@ public class NoteButtonHandler extends WidgetGroup {
 	public static final String NOTE = "note";
 	
 	private static NoteButton selectedButton;
-	private static String noteType = NOTE;
+	private static String noteType;
 	
 	public NoteButtonHandler(Skin skin) {
+		noteType = NOTE;
 		final ResizableImage pauseButton = new ResizableImage(skin.getDrawable("pause-button"), skin.getDrawable("pause-button-down"),0.25f, 0.05f, 0.15f, ResizableImage.BOTTOM_LEFT);
 		final ResizableImage removeButton = new ResizableImage(skin.getDrawable("dot-button"), skin.getDrawable("dot-button-down"),0.4f, 0.05f, 0.15f, ResizableImage.BOTTOM_LEFT);
 		pauseButton.addListener(new ClickListener() {
