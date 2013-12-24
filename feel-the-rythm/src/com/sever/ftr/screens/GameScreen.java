@@ -51,8 +51,6 @@ public class GameScreen implements Screen {
 	private Stave stave;
 	ResizableImage doneButton;
 	ResizableImage replayButton;
-	ResizableImage leftArrowButton;
-	ResizableImage rightArrowButton;
 	
 	Image stoveBg;
 	
@@ -81,8 +79,6 @@ public class GameScreen implements Screen {
 		/* resize other buttons */
 		doneButton.resize(width, height);
 		replayButton.resize(width, height);
-		leftArrowButton.resize(width, height);
-		rightArrowButton.resize(width, height);
 		/* Resize stave */
 		stave.resize(width, height);
     }
@@ -112,8 +108,6 @@ public class GameScreen implements Screen {
 		
 		doneButton = new ResizableImage(skin.getDrawable("done-button"), 0.95f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
 		replayButton = new ResizableImage(skin.getDrawable("replay-button"), skin.getDrawable("replay-button-down"), 0.825f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
-		leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"), 0.23f, 0.8f,  0.35f, ResizableImage.TOP_RIGHT);
-		rightArrowButton = new ResizableImage(skin.getDrawable("right-arrow"), skin.getDrawable("right-arrow-down"), 0.92f, 0.8f,  0.35f, ResizableImage.TOP_LEFT);
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
@@ -150,34 +144,9 @@ public class GameScreen implements Screen {
 		stave.addNote(0, game.getGameState().getSolution().get(0)); // set first note of solution
 		stage.addActor(stave);
 		stage.addActor(noteButtonHandler);
-		// Stave movement
-		leftArrowButton.addListener(new ClickListener() {
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				stave.moveLeft();
-				((ResizableImage) event.getListenerActor()).drawImageDown();
-				return super.touchDown(event, x, y, pointer, button);
-			}
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				((ResizableImage) event.getListenerActor()).drawOriginalImage();
-				super.touchUp(event, x, y, pointer, button);
-			}
-	    });
-		rightArrowButton.addListener(new ClickListener() {
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				stave.moveRight();
-				((ResizableImage) event.getListenerActor()).drawImageDown();
-				return super.touchDown(event, x, y, pointer, button);
-			}
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				((ResizableImage) event.getListenerActor()).drawOriginalImage();
-				super.touchUp(event, x, y, pointer, button);
-			}
-	    });
 		
 		stage.addActor(doneButton);
 		stage.addActor(replayButton);
-		stage.addActor(leftArrowButton);
-		stage.addActor(rightArrowButton);
 		stage.addActor(songTitle);
 		
 		Gdx.input.setInputProcessor(stage);

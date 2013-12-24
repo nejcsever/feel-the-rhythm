@@ -21,8 +21,11 @@ public class Stave extends WidgetGroup {
 	private static final float[] PAUSE_DRAWABLE_POSITIONS = {0.725f, 0.54f, 0.55f, 0.35f, 0.165f};
 	private static final int[] PAUSE_DRAWABLE_ORIGINS = {ResizableImage.TOP_CENTER, ResizableImage.BOTTOM_CENTER, ResizableImage.CENTER_CENTER, ResizableImage.BOTTOM_CENTER, ResizableImage.BOTTOM_CENTER};
 	
+	private static final float ARROW_PADDING = 0.02f;
 	private static final float STEM_NOTE_SIZE_PERCENTAGE = 0.7f;
 	private static final float FRONT_PADDING = 0.6f; // paddign for first shown note
+	private static final String LEFT_ARROW_NAME = "right-arrow";
+	private static final String RIGHT_ARROW_NAME = "left-arrow";
 	
 	/* Stave position on the screen in percentage */
 	private float x;
@@ -42,6 +45,9 @@ public class Stave extends WidgetGroup {
 	private ArrayList<Note> noteList;
 	/* Contains ResizableImage's for notes that are currently visible. */
 	private ResizableImage[] noteWindow;
+	
+	private ResizableImage leftArrowButton;
+	private ResizableImage rightArrowButton;
 	
 	public Stave(float x, float y, float height, float width, NoteButtonHandler noteButtonHandler) {
 		this.x = x;
@@ -68,13 +74,48 @@ public class Stave extends WidgetGroup {
 
 		this.addListener(new ClickListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				handleStaveTouch(((Stave)event.getListenerActor()), x, y);
+				/* Don't handle touch ifarrows are pressed. */
+				String targetName = event.getTarget().getName();
+				if (targetName == null || !(targetName.equals(LEFT_ARROW_NAME) || targetName.equals(RIGHT_ARROW_NAME))) {
+					handleStaveTouch(((Stave)event.getListenerActor()), x, y);
+				}
+					
 				return super.touchDown(event, x, y, pointer, button);
 			}
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				super.touchUp(event, x, y, pointer, button);
 			}
 		});
+		
+		// Stave movement arrows
+		leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"), 0f + x - ARROW_PADDING * width, height*0.55f + y,  0.35f, ResizableImage.CENTER_RIGHT);
+		leftArrowButton.setName(LEFT_ARROW_NAME); // for handling input
+		rightArrowButton = new ResizableImage(skin.getDrawable("right-arrow"), skin.getDrawable("right-arrow-down"), 0.92f, 0.8f,  0.35f, ResizableImage.TOP_LEFT);
+		rightArrowButton.setName(RIGHT_ARROW_NAME); // for handling input
+		leftArrowButton.addListener(new ClickListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				moveLeft();
+				((ResizableImage) event.getListenerActor()).drawImageDown();
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				((ResizableImage) event.getListenerActor()).drawOriginalImage();
+				super.touchUp(event, x, y, pointer, button);
+			}
+	    });
+		rightArrowButton.addListener(new ClickListener() {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				moveRight();
+				((ResizableImage) event.getListenerActor()).drawImageDown();
+				return super.touchDown(event, x, y, pointer, button);
+			}
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				((ResizableImage) event.getListenerActor()).drawOriginalImage();
+				super.touchUp(event, x, y, pointer, button);
+			}
+	    });
+		this.addActor(leftArrowButton);
+		this.addActor(rightArrowButton);
 	}
 	
 	/**
@@ -88,6 +129,8 @@ public class Stave extends WidgetGroup {
 		for(int i = 0; i < noteWindow.length; i++) {
 			noteWindow[i].resize(width, height);
 		}
+		leftArrowButton.resize(width, height);
+		rightArrowButton.resize(width, height);
 	}
 	
 	public void updateNoteWindow() {
@@ -206,5 +249,10 @@ public class Stave extends WidgetGroup {
 
 	public ArrayList<Note> getNoteList() {
 		return noteList;
+	}
+	
+	public void dispose() {
+		atlas.dispose();
+		skin.dispose();
 	}
 }
