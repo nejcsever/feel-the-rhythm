@@ -52,6 +52,14 @@ empty-stem-down
   orig: 190, 400
   offset: 0, 0
   index: -1
+wrong-note
+  rotate: false
+  xy: 992, 998
+  size: 10, 10
+  split: 0, 0, 0, 0
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
 
 stave2.png
 format: RGBA8888

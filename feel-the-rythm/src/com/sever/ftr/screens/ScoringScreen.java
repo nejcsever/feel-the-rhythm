@@ -25,7 +25,7 @@ import com.sever.ftr.FTRGame;
 import com.sever.ftr.HighScore;
 import com.sever.ftr.handlers.Note;
 import com.sever.ftr.handlers.ScoringHandler;
-import com.sever.ftr.handlers.Stave;
+import com.sever.ftr.handlers.SolutionStave;
 
 public class ScoringScreen implements Screen {
 
@@ -49,7 +49,7 @@ public class ScoringScreen implements Screen {
 	private BitmapFont buttonFont;
 	private BitmapFont smallFont;
 	
-	private Stave stave;
+	private SolutionStave stave;
 
 	public ScoringScreen(FTRGame game) {
 		this.game = game;
@@ -79,7 +79,7 @@ public class ScoringScreen implements Screen {
 	    FileHandle fontFile = Gdx.files.internal("fonts/Dosis-Light.ttf");
 	    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
 	    titleFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.1f));
-	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.08f));
+	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.05f));
 	    smallFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.05f));
 	    generator.dispose();
 		
@@ -106,7 +106,8 @@ public class ScoringScreen implements Screen {
 		
 		final TextButtonStyle tbsBack = new TextButtonStyle(skin.getDrawable("white-level-button"),skin.getDrawable("white-level-button-down"),skin.getDrawable("white-level-button-down"), buttonFont);
 		tbsBack.fontColor = Color.BLACK;
-		TextButton backButton = new TextButton("   Continue   ", tbsBack);
+		TextButton backButton = new TextButton("Continue", tbsBack);
+		backButton.pad(Math.round(Gdx.graphics.getHeight() * 0.025f));
 		backButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
@@ -142,7 +143,7 @@ public class ScoringScreen implements Screen {
 		table.row();
 		table.add(backButton).padBottom(Gdx.graphics.getHeight()*0.05f).bottom();
 		
-		stave = new Stave(0.15f, 0.55f, 0.4f, 0.7f, 7);
+		stave = new SolutionStave(0.15f, 0.55f, 0.4f, 0.7f, 7, game.getGameState());
 		/* Fill stave with users solution */
 		for(Note note : game.getGameState().getUsersSolution()) {
 			stave.addNote(note); // set first note of solution

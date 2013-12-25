@@ -169,11 +169,6 @@ public class ResizableImage extends Image {
 	public void setImageDown(Drawable image) {
 		this.imageDown = image;
 	}
-	
-	public void resetImage() {
-		super.setDrawable(null);
-		this.image = null;
-	}
 
 	public void setHeightPercentage(float heightPercentage) {
 		this.heightPercentage = heightPercentage;

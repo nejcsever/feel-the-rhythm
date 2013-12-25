@@ -13,12 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class Stave extends WidgetGroup {
 
 	public static final int NUMBER_OF_ROWS = 11;
-	private static final String[] NOTE_DRAWABLE_STRINGS = {"full-note", "empty-stem", "full-stem", "stem-flag", "stem-doubleflag"};
-	private static final String[] NOTE_DRAWABLE_DOWN_STRINGS = {"full-note-down", "empty-stem-down", "full-stem-down", "stem-flag-down", "stem-doubleflag-down"};
-	private static final String[] PAUSE_DRAWABLE_STRINGS = {"full-rest", "full-rest", "quarter-rest", "eighth-rest", "sixteenth-rest"};
-	private static final float[] PAUSE_DRAWABLE_SIZES = {0.1f, 0.1f, 0.7f, 0.35f, 0.52f};
-	private static final float[] PAUSE_DRAWABLE_POSITIONS = {0.725f, 0.54f, 0.55f, 0.35f, 0.165f};
-	private static final int[] PAUSE_DRAWABLE_ORIGINS = {ResizableImage.TOP_CENTER, ResizableImage.BOTTOM_CENTER, ResizableImage.CENTER_CENTER, ResizableImage.BOTTOM_CENTER, ResizableImage.BOTTOM_CENTER};
+	protected static final String[] NOTE_DRAWABLE_STRINGS = {"full-note", "empty-stem", "full-stem", "stem-flag", "stem-doubleflag"};
+	protected static final String[] NOTE_DRAWABLE_DOWN_STRINGS = {"full-note-down", "empty-stem-down", "full-stem-down", "stem-flag-down", "stem-doubleflag-down"};
+	protected static final String[] PAUSE_DRAWABLE_STRINGS = {"full-rest", "full-rest", "quarter-rest", "eighth-rest", "sixteenth-rest"};
+	protected static final float[] PAUSE_DRAWABLE_SIZES = {0.1f, 0.1f, 0.7f, 0.35f, 0.52f};
+	protected static final float[] PAUSE_DRAWABLE_POSITIONS = {0.725f, 0.54f, 0.55f, 0.35f, 0.165f};
+	protected static final int[] PAUSE_DRAWABLE_ORIGINS = {ResizableImage.TOP_CENTER, ResizableImage.BOTTOM_CENTER, ResizableImage.CENTER_CENTER, ResizableImage.BOTTOM_CENTER, ResizableImage.BOTTOM_CENTER};
 	
 	private static final float ARROW_PADDING = 0.02f;
 	private static final float STEM_NOTE_SIZE_PERCENTAGE = 0.7f;
@@ -26,28 +26,28 @@ public class Stave extends WidgetGroup {
 	public static final String RIGHT_ARROW_NAME = "left-arrow";
 	
 	/* Stave position on the screen in percentage */
-	private float x;
-	private float y;
+	protected float x;
+	protected float y;
 	/* Stave height and width in percentage */
-	private float height;
-	private float width;
+	protected float height;
+	protected float width;
 	/* Current position of noteWindow */
-	private int currentColumnPosition = 0;
-	private float columnWidthPercentage;
-	private float rowHeightPercentage = (float) 1 / NUMBER_OF_ROWS;
+	protected int currentColumnPosition = 0;
+	protected float columnWidthPercentage;
+	protected float rowHeightPercentage = (float) 1 / NUMBER_OF_ROWS;
 	private Image background;
 	private TextureAtlas atlas;
-	private Skin skin;
+	protected Skin skin;
 	private NoteButtonHandler noteButtonHandler;
 	/* Contains list of all notes in stave */
-	private ArrayList<Note> noteList;
+	protected ArrayList<Note> noteList;
 	/* Contains ResizableImage's for notes that are currently visible. */
-	private ResizableImage[] noteWindow;
+	protected ResizableImage[] noteWindow;
 	
 	private ResizableImage leftArrowButton;
-	private ResizableImage rightArrowButton;
+	protected ResizableImage rightArrowButton;
 
-	private float frontPadding = 0.6f; // paddign for first shown note
+	protected float frontPadding = 0.6f; // paddign for first shown note
 	public Stave(float x, float y, float height, float width, int numberOfColumns) {
 		this.x = x;
 		this.y = y;
@@ -132,7 +132,7 @@ public class Stave extends WidgetGroup {
 		} else {
 			leftArrowButton.setVisible(true);
 		}
-		if (noteList.size() - currentColumnPosition < 2) {
+		if (noteList.size() - currentColumnPosition <= 1) {
 			rightArrowButton.setVisible(false);
 		} else {
 			rightArrowButton.setVisible(true);
@@ -142,8 +142,10 @@ public class Stave extends WidgetGroup {
 		for (int i = 0; i < noteWindow.length; i++) {
 			/*If noteList is not shorter then sum of values*/
 			if (i + currentColumnPosition >= noteList.size()) {
-				noteWindow[i].resetImage();
+				noteWindow[i].setVisible(false);
 				continue;
+			} else {
+				noteWindow[i].setVisible(true);
 			}
 
 			Note currentNote = noteList.get(i + currentColumnPosition);
