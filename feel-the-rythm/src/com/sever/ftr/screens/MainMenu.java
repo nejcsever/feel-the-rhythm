@@ -83,11 +83,12 @@ public class MainMenu implements Screen {
 		playButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				super.clicked(event, x, y);
 				game.switchScreen(FTRGame.LEVEL_SELECT_SCREEN);
+				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				playButton.drawImageDown();
+				game.getClick().play();
 				return super.touchDown(event, x, y, pointer, button);
 			}
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -96,13 +97,15 @@ public class MainMenu implements Screen {
 			}
 	    });
 		
-		ResizableImage settingsButton = new ResizableImage(skin.getDrawable("settings-button"), 0.12f, 0.05f, 0.25f, ResizableImage.BOTTOM_LEFT);
-		settingsButton.addListener(new ClickListener() {
+		ResizableImage tutorialButton = new ResizableImage(skin.getDrawable("settings-button"), 0.12f, 0.05f, 0.25f, ResizableImage.BOTTOM_LEFT);
+		tutorialButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
+				game.switchScreen(FTRGame.TUTORIAL_SCREEN);
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				game.getClick().play();
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });
@@ -111,16 +114,18 @@ public class MainMenu implements Screen {
 		aboutButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
+				game.switchScreen(FTRGame.ABOUT_SCREEN);
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				game.getClick().play();
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });
 		widgetGroup = new WidgetGroup();
 		widgetGroup.addActor(playButton);
 		widgetGroup.addActor(logo);
-		widgetGroup.addActor(settingsButton);
+		widgetGroup.addActor(tutorialButton);
 		widgetGroup.addActor(aboutButton);
 		stage.addActor(widgetGroup);
 		

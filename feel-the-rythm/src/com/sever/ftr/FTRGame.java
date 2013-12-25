@@ -1,12 +1,17 @@
 package com.sever.ftr;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.sever.ftr.interfaces.MidiPlayer;
+import com.sever.ftr.screens.AboutScreen;
 import com.sever.ftr.screens.GameScreen;
 import com.sever.ftr.screens.LevelSelectScreen;
 import com.sever.ftr.screens.MainMenu;
 import com.sever.ftr.screens.ScoringScreen;
+import com.sever.ftr.screens.TutorialScreen;
 
 public class FTRGame extends Game {
 	
@@ -15,6 +20,8 @@ public class FTRGame extends Game {
 	public static final String MAIN_MENU_SCREEN = "mainMenuScreen";
 	public static final String LEVEL_SELECT_SCREEN = "levelSelectScreen";
 	public static final String SCORING_SCREEN = "scoringScreen";
+	public static final String ABOUT_SCREEN = "aboutScreen";
+	public static final String TUTORIAL_SCREEN = "tutorialScreen";
 	
 	public static final String LEVELS_DIR_PATH = "levels";
 	
@@ -23,11 +30,16 @@ public class FTRGame extends Game {
 	private Screen gameScreen;
 	private Screen levelSelectScreen;
 	private Screen scoringScreen;
+	private Screen aboutScreen;
+	private Screen tutorialScreen;
 	
 	/* Game state (current midi, solution,...) */
 	private GameState gameState;
 
 	private MidiPlayer midiPlayer;
+	
+	private Music backgroundMusic;
+	private Sound click;
 	
 	public FTRGame(MidiPlayer midiPlayer) {
 		this.midiPlayer = midiPlayer;
@@ -38,6 +50,11 @@ public class FTRGame extends Game {
 		gameState = new GameState();
 		mainMenuScreen = new MainMenu(this);
 		this.setScreen(mainMenuScreen);
+		/* Load sound */
+		click = Gdx.audio.newSound(Gdx.files.internal("sound/click.mp3"));
+		backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/canon.mp3"));
+		backgroundMusic.setLooping(true);
+		backgroundMusic.play();
 	}
 
 	@Override
@@ -49,6 +66,8 @@ public class FTRGame extends Game {
 		} catch (Exception e) {
 			// No sequencer opened
 		}
+		backgroundMusic.dispose();
+		click.dispose();
 	}
 
 	@Override
@@ -94,9 +113,11 @@ public class FTRGame extends Game {
 	
 	public void switchScreen(String screenName) {
 		if (screenName.equals(GAME_SCREEN)) {
+			backgroundMusic.stop();
 			if (gameScreen == null)
 				gameScreen = new GameScreen(this);
 			this.setScreen(gameScreen);
+			return;
 		}
 		if (screenName.equals(LEVEL_SELECT_SCREEN)) {
 			if (levelSelectScreen == null)
@@ -105,15 +126,37 @@ public class FTRGame extends Game {
 		}
 		if (screenName.equals(MAIN_MENU_SCREEN)) {
 			this.setScreen(mainMenuScreen);
+			if (!backgroundMusic.isPlaying()) {
+				backgroundMusic.stop();
+				backgroundMusic.play();
+			}
 		}
 		if (screenName.equals(SCORING_SCREEN)) {
 			if (scoringScreen == null)
 				scoringScreen = new ScoringScreen(this);
 			this.setScreen(scoringScreen);
 		}
+		if (screenName.equals(ABOUT_SCREEN)) {
+			if (aboutScreen == null)
+				aboutScreen = new AboutScreen(this);
+			this.setScreen(aboutScreen);
+		}
+		if (screenName.equals(TUTORIAL_SCREEN)) {
+			if (tutorialScreen == null)
+				tutorialScreen = new TutorialScreen(this);
+			this.setScreen(tutorialScreen);
+		}
+	}
+	
+	public Music getBackgroundMusic() {
+		return backgroundMusic;
 	}
 	
 	public GameState getGameState() {
 		return gameState;
+	}
+	
+	public Sound getClick() {
+		return click;
 	}
 }

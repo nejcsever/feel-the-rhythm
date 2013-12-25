@@ -117,9 +117,7 @@ public class GameScreen implements Screen {
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				//TODO TRANSFER THIS TO EDITOR !!!
-				// MidiNoteConverter.saveMidi(stave.getNoteList(), FTRGame.LEVELS_DIR_PATH + "/myLevel.mid", MidiNoteConverter.LOCAL_STORAGE);
-				/* Save users solution to gamestate and switch screen */
+				game.getClick().play();
 				game.getGameState().setUsersSolution(stave.getNoteList());
 				game.switchScreen(FTRGame.SCORING_SCREEN);
 				super.clicked(event, x, y);

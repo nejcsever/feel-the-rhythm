@@ -35,7 +35,7 @@ public class SolutionStave extends Stave {
 			rightArrowButton.setVisible(true);
 		}
 		/* Update notes */
-		for (int i = 0; i < noteWindow.length; i++) {
+		for (int i = 0; i < labelWindow.length; i++) {
 			/*If noteList is not shorter then sum of values*/
 			if (i + currentColumnPosition >= noteList.size()) {
 				labelWindow[i].setVisible(false);

@@ -161,6 +161,7 @@ public class LevelSelectScreen implements Screen {
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				tbsBack.fontColor = Color.GRAY;
+				game.getClick().play();
 				return super.touchDown(event, x, y, pointer, button);
 			}
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -177,6 +178,7 @@ public class LevelSelectScreen implements Screen {
 			public void clicked (InputEvent event, float x, float y)
 	        {	
 				/* Update gamestate and switch screen */
+				game.getClick().play();
 				game.getGameState().setCurrentMidiPath(filePath);
 				game.getGameState().setStorageType(storageType);
 				game.getGameState().setSongTitle(MidiNoteConverter.convertFileToTitle(fileName));
