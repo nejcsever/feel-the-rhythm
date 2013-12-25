@@ -80,44 +80,58 @@ pause-button
   orig: 84, 84
   offset: 0, 0
   index: -1
-quaver-button-down
+play-button-down
   rotate: false
   xy: 755, 143
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
-quaver-button
+play-button
   rotate: false
   xy: 841, 143
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
-semibreve-button-down
+quaver-button-down
   rotate: false
   xy: 927, 143
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
-semibreve-button
+quaver-button
   rotate: false
   xy: 259, 1
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
-semiquaver-button-down
+semibreve-button-down
   rotate: false
   xy: 345, 57
   size: 84, 84
   orig: 84, 84
   offset: 0, 0
   index: -1
-semiquaver-button
+semibreve-button
   rotate: false
   xy: 431, 57
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+semiquaver-button-down
+  rotate: false
+  xy: 517, 57
+  size: 84, 84
+  orig: 84, 84
+  offset: 0, 0
+  index: -1
+semiquaver-button
+  rotate: false
+  xy: 603, 57
   size: 84, 84
   orig: 84, 84
   offset: 0, 0

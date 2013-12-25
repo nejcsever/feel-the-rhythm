@@ -23,11 +23,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.GameState;
+import com.sever.ftr.handlers.MidiNoteConverter;
 import com.sever.ftr.handlers.NoteButtonHandler;
 import com.sever.ftr.handlers.ResizableImage;
 import com.sever.ftr.handlers.Stave;
 
 public class GameScreen implements Screen {
+	
+	private static final String TEMP_MIDI_PATH = "temp/temp.mid";
 
 	private final FTRGame game;
 	
@@ -51,6 +54,7 @@ public class GameScreen implements Screen {
 	private Stave stave;
 	ResizableImage doneButton;
 	ResizableImage replayButton;
+	private ResizableImage playButton;
 	
 	Image stoveBg;
 	
@@ -79,6 +83,7 @@ public class GameScreen implements Screen {
 		/* resize other buttons */
 		doneButton.resize(width, height);
 		replayButton.resize(width, height);
+		playButton.resize(width, height);
 		/* Resize stave */
 		stave.resize(width, height);
     }
@@ -108,6 +113,7 @@ public class GameScreen implements Screen {
 		
 		doneButton = new ResizableImage(skin.getDrawable("done-button"), 0.95f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
 		replayButton = new ResizableImage(skin.getDrawable("replay-button"), skin.getDrawable("replay-button-down"), 0.825f, 0.05f, 0.2f, ResizableImage.BOTTOM_RIGHT);
+		playButton = new ResizableImage(skin.getDrawable("play-button"), skin.getDrawable("play-button-down"),0.55f, 0.05f, 0.15f, ResizableImage.BOTTOM_LEFT);
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
@@ -125,7 +131,19 @@ public class GameScreen implements Screen {
 		replayButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				game.replayMidi(game.getGameState().getCurrentMidiPath());
+				game.replayMidi(game.getGameState().getCurrentMidiPath(), game.getGameState().getStorageType().equals(MidiNoteConverter.INTERNAL_STORAGE));
+				super.clicked(event, x, y);
+	        }
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return super.touchDown(event, x, y, pointer, button);
+			}
+	    });
+		playButton.addListener(new ClickListener() {
+			public void clicked (InputEvent event, float x, float y)
+	        {
+				MidiNoteConverter.saveMidi(stave.getNoteList(), TEMP_MIDI_PATH, MidiNoteConverter.LOCAL_STORAGE);
+				System.out.println(Gdx.files.local(TEMP_MIDI_PATH).path().toString());
+				game.playMidi(Gdx.files.local(TEMP_MIDI_PATH).path().toString(), false, false);
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -148,12 +166,13 @@ public class GameScreen implements Screen {
 		stage.addActor(doneButton);
 		stage.addActor(replayButton);
 		stage.addActor(songTitle);
+		stage.addActor(playButton);
 		
 		Gdx.input.setInputProcessor(stage);
 		
 		// MIDI stuff
 		GameState gameState = game.getGameState();
-		game.playMidi(gameState.getCurrentMidiPath(), false);
+		game.playMidi(gameState.getCurrentMidiPath(), false, game.getGameState().getStorageType().equals(MidiNoteConverter.INTERNAL_STORAGE));
 		/*FileHandle dirHandle = Gdx.files.internal(FTRGame.LEVELS_DIR_PATH);
 		FileHandle[] files = dirHandle.list();
 		if (files.length != 0) {

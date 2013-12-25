@@ -2,7 +2,6 @@ package com.sever.ftr;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.sever.ftr.handlers.MidiNoteConverter;
 import com.sever.ftr.interfaces.MidiPlayer;
 import com.sever.ftr.screens.GameScreen;
 import com.sever.ftr.screens.LevelSelectScreen;
@@ -73,18 +72,18 @@ public class FTRGame extends Game {
 		super.resume();
 	}
 	
-	public void playMidi(String source, boolean looping) {
+	public void playMidi(String source, boolean looping, boolean fromAssets) {
 		midiPlayer.setLooping(looping);
         midiPlayer.setVolume(100f);
-        midiPlayer.open(source, gameState.getStorageType().equals(MidiNoteConverter.INTERNAL_STORAGE));
+        midiPlayer.open(source, fromAssets);
         midiPlayer.play();
 	}
 	
-	public void replayMidi(String source) {
+	public void replayMidi(String source, boolean fromAssets) {
 		if (midiPlayer.isPlaying()) {
 			midiPlayer.stop();
 		}
-		playMidi(source, false);
+		playMidi(source, false, fromAssets);
 	}
 	
 	public void stopMidi() {
