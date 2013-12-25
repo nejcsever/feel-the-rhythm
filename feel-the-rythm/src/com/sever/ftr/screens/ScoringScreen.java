@@ -80,7 +80,7 @@ public class ScoringScreen implements Screen {
 	    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
 	    titleFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.1f));
 	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.08f));
-	    smallFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.03f));
+	    smallFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.05f));
 	    generator.dispose();
 		
 		/* Load background */
@@ -102,7 +102,7 @@ public class ScoringScreen implements Screen {
 		table.bottom();
 		
 		int score = ScoringHandler.getScorePercentage(game.getGameState().getUsersSolution(), game.getGameState().getSolution());
-		int highScore = HighScore.updateHighScore(game.getGameState().getCurrentMidiPath(), score);
+		boolean isNewHighscore = HighScore.updateHighScore(game.getGameState().getCurrentMidiPath(), score);
 		
 		final TextButtonStyle tbsBack = new TextButtonStyle(skin.getDrawable("white-level-button"),skin.getDrawable("white-level-button-down"),skin.getDrawable("white-level-button-down"), buttonFont);
 		tbsBack.fontColor = Color.BLACK;
@@ -124,7 +124,7 @@ public class ScoringScreen implements Screen {
 	    });
 		
 		LabelStyle lsTitle = new LabelStyle(titleFont, Color.BLACK);
-		Label titleLabel = new Label((highScore < score) ? "NEW HIGHSCORE!" : "Your score:", lsTitle);
+		Label titleLabel = new Label(isNewHighscore ? "NEW HIGH SCORE!" : "Your score:", lsTitle);
 		table.add(titleLabel).top();
 		table.row();
 		LabelStyle lsScore = new LabelStyle(titleFont, new Color(0,0.6f,0,1)); // dark green
@@ -133,11 +133,11 @@ public class ScoringScreen implements Screen {
 		} else if (score < 90) {
 			lsScore.fontColor = new Color(0.9f,0.4f,0,1); // orange
 		}
-		table.add(new Label(score + "%", lsScore)).pad(Gdx.graphics.getHeight()*0.03f);
-		if (highScore > score) {
+		table.add(new Label(score + "%", lsScore));
+		if (!isNewHighscore) {
 			LabelStyle phs = new LabelStyle(smallFont, Color.DARK_GRAY);
 			table.row();
-			table.add(new Label("High score: " + highScore + "%", phs)).pad(Gdx.graphics.getHeight()*0.01f);
+			table.add(new Label("Hi-Score: " + HighScore.readHighScore(game.getGameState().getCurrentMidiPath()) + "%", phs)).pad(Gdx.graphics.getHeight()*0.01f);
 		}
 		table.row();
 		table.add(backButton).padBottom(Gdx.graphics.getHeight()*0.05f).bottom();

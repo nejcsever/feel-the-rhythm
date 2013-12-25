@@ -122,7 +122,7 @@ public class LevelSelectScreen implements Screen {
 		for (FileHandle file: dirHandle.list()) {
 			levelsTable.row();
 			int highScore = HighScore.readHighScore(file.path());
-			String labelText = (highScore < 0)? "No score yet": "High score: " + highScore + "%";
+			String labelText = (highScore < 0)? "No Hi-Score": "Hi-Score: " + highScore + "%";
 			if (highScore == 100) {
 				tempBtnStyle = tbsGreen;
 				labelText = "LEVEL CLEARED";
