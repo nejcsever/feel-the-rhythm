@@ -53,18 +53,21 @@ public class HighScore {
 	 * If it exists, then check if given highscore is greater then before.
 	 * If it is, highscore is updated.
 	 */
-	public static void updateHighScore(String levelName, int newScore) {
+	public static int updateHighScore(String levelName, int newScore) {
 		Json json = new Json();
 		if (highscoreObject == null) {
 			retrieveHighscoreObject();
 		}
 		boolean changed = false;
+		int highScore = 0;
 		if (highscoreObject.getLevels().containsKey(levelName)) {
-			if (highscoreObject.getLevels().get(levelName) < newScore) {
+			highScore = highscoreObject.getLevels().get(levelName);
+			if (highScore < newScore) {
 				highscoreObject.getLevels().put(levelName, newScore);
 				changed = true;
     		}
 		} else {
+			highScore = newScore;
 			highscoreObject.getLevels().put(levelName, newScore);
 			changed = true;
 		}
@@ -76,6 +79,7 @@ public class HighScore {
 	        String jsonText = json.toJson(highscoreObject);
 	        fh.writeString(Base64Coder.encodeString(jsonText), false);
         }
+        return highScore;
 	}
 	
 	public static void removeHighScore(String levelName) {

@@ -140,8 +140,8 @@ public class GameScreen implements Screen {
 		songTitle.setPosition(Gdx.graphics.getWidth()-songTitle.getWidth() - Gdx.graphics.getWidth() * 0.05f, Gdx.graphics.getHeight() - songTitle.getHeight());
 		
 		/* Stave */
-		stave = new Stave(0.25f, 0.35f, 0.50f, 0.65f, noteButtonHandler);
-		stave.addNote(0, game.getGameState().getSolution().get(0)); // set first note of solution
+		stave = new Stave(0.25f, 0.35f, 0.50f, 0.65f, 6, noteButtonHandler);
+		stave.addNote(game.getGameState().getSolution().get(0)); // set first note of solution
 		stage.addActor(stave);
 		stage.addActor(noteButtonHandler);
 		
@@ -187,5 +187,6 @@ public class GameScreen implements Screen {
 		stage.dispose();
 		atlas.dispose();
 		titleFont.dispose();
+		stave.dispose();
 	}
 }

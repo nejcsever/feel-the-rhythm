@@ -16,14 +16,16 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.HighScore;
+import com.sever.ftr.handlers.Note;
 import com.sever.ftr.handlers.ScoringHandler;
+import com.sever.ftr.handlers.Stave;
 
 public class ScoringScreen implements Screen {
 
@@ -45,6 +47,9 @@ public class ScoringScreen implements Screen {
 	
 	private BitmapFont titleFont;
 	private BitmapFont buttonFont;
+	private BitmapFont smallFont;
+	
+	private Stave stave;
 
 	public ScoringScreen(FTRGame game) {
 		this.game = game;
@@ -64,6 +69,7 @@ public class ScoringScreen implements Screen {
 	@Override
 	public void resize(int width, int height) {
 		stage.setViewport(width, height, false);
+		stave.resize(width, height);
     }
 
 
@@ -73,7 +79,8 @@ public class ScoringScreen implements Screen {
 	    FileHandle fontFile = Gdx.files.internal("fonts/Dosis-Light.ttf");
 	    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
 	    titleFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.1f));
-	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.05f));
+	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.08f));
+	    smallFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.03f));
 	    generator.dispose();
 		
 		/* Load background */
@@ -92,16 +99,14 @@ public class ScoringScreen implements Screen {
 		Gdx.input.setInputProcessor(stage);
 		table = new Table();
 		table.setFillParent(true);
+		table.bottom();
 		
-		LabelStyle ls = new LabelStyle(titleFont, Color.BLACK);
-		table.add(new Label("Your score:", ls)).pad(30);
-		table.row();
 		int score = ScoringHandler.getScorePercentage(game.getGameState().getUsersSolution(), game.getGameState().getSolution());
-		HighScore.updateHighScore(game.getGameState().getCurrentMidiPath(), score);
+		int highScore = HighScore.updateHighScore(game.getGameState().getCurrentMidiPath(), score);
 		
-		final TextButtonStyle tbsBack = new TextButtonStyle(null, null, null, buttonFont);
+		final TextButtonStyle tbsBack = new TextButtonStyle(skin.getDrawable("white-level-button"),skin.getDrawable("white-level-button-down"),skin.getDrawable("white-level-button-down"), buttonFont);
 		tbsBack.fontColor = Color.BLACK;
-		TextButton backButton = new TextButton("BACK", tbsBack);
+		TextButton backButton = new TextButton("   Continue   ", tbsBack);
 		backButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
@@ -117,9 +122,32 @@ public class ScoringScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 			}
 	    });
-		table.add(new Label(score + "%", ls)).pad(30);
+		
+		LabelStyle lsTitle = new LabelStyle(titleFont, Color.BLACK);
+		Label titleLabel = new Label((highScore < score) ? "NEW HIGHSCORE!" : "Your score:", lsTitle);
+		table.add(titleLabel).top();
 		table.row();
-		table.add(backButton).pad(40).fill();
+		LabelStyle lsScore = new LabelStyle(titleFont, new Color(0,0.6f,0,1)); // dark green
+		if (score < 50) {
+			lsScore.fontColor = Color.RED;
+		} else if (score < 90) {
+			lsScore.fontColor = new Color(0.9f,0.4f,0,1); // orange
+		}
+		table.add(new Label(score + "%", lsScore)).pad(Gdx.graphics.getHeight()*0.03f);
+		if (highScore > score) {
+			LabelStyle phs = new LabelStyle(smallFont, Color.DARK_GRAY);
+			table.row();
+			table.add(new Label("High score: " + highScore + "%", phs)).pad(Gdx.graphics.getHeight()*0.01f);
+		}
+		table.row();
+		table.add(backButton).padBottom(Gdx.graphics.getHeight()*0.05f).bottom();
+		
+		stave = new Stave(0.15f, 0.55f, 0.4f, 0.7f, 7);
+		/* Fill stave with users solution */
+		for(Note note : game.getGameState().getUsersSolution()) {
+			stave.addNote(note); // set first note of solution
+		}
+		stage.addActor(stave);
 		stage.addActor(table);
 	}
 
@@ -144,6 +172,8 @@ public class ScoringScreen implements Screen {
 		atlas.dispose();
 		titleFont.dispose();
 		buttonFont.dispose();
+		stave.dispose();
+		smallFont.dispose();
 	}
 
 }

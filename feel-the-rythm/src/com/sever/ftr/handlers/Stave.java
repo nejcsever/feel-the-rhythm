@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class Stave extends WidgetGroup {
 
-	public static final int NUMBER_OF_COLUMNS = 5;
 	public static final int NUMBER_OF_ROWS = 11;
 	private static final String[] NOTE_DRAWABLE_STRINGS = {"full-note", "empty-stem", "full-stem", "stem-flag", "stem-doubleflag"};
 	private static final String[] NOTE_DRAWABLE_DOWN_STRINGS = {"full-note-down", "empty-stem-down", "full-stem-down", "stem-flag-down", "stem-doubleflag-down"};
@@ -34,7 +33,7 @@ public class Stave extends WidgetGroup {
 	private float width;
 	/* Current position of noteWindow */
 	private int currentColumnPosition = 0;
-	private float columnWidthPercentage = (float) 1 / NUMBER_OF_COLUMNS;
+	private float columnWidthPercentage;
 	private float rowHeightPercentage = (float) 1 / NUMBER_OF_ROWS;
 	private Image background;
 	private TextureAtlas atlas;
@@ -47,17 +46,16 @@ public class Stave extends WidgetGroup {
 	
 	private ResizableImage leftArrowButton;
 	private ResizableImage rightArrowButton;
-	
 
 	private float frontPadding = 0.6f; // paddign for first shown note
-	
-	public Stave(float x, float y, float height, float width, NoteButtonHandler noteButtonHandler) {
+	public Stave(float x, float y, float height, float width, int numberOfColumns) {
 		this.x = x;
 		this.y = y;
 		this.height = height;
 		this.width = width;
-		this.noteButtonHandler = noteButtonHandler;
+		this.noteButtonHandler = null;
 		this.frontPadding = 0.6f;
+		columnWidthPercentage = (float) 1 / numberOfColumns;
 		
 		atlas = new TextureAtlas(Gdx.files.internal("textures/stave.pack"));
 		skin = new Skin(atlas);
@@ -69,18 +67,16 @@ public class Stave extends WidgetGroup {
 		noteList = new ArrayList<Note>();
 		
 		/*create empty noteWindow */
-		noteWindow = new ResizableImage[NUMBER_OF_COLUMNS];
+		noteWindow = new ResizableImage[numberOfColumns];
 		for(int i = 0; i < noteWindow.length; i++) {
 			noteWindow[i] = new ResizableImage(0f, ResizableImage.TOP_CENTER);
 			this.addActor(noteWindow[i]);
 		}
-		/* Drag listener */
-		this.addListener(new StaveDragListener(this));
 		
 		// Stave movement arrows
-		leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"), 0f + x - ARROW_PADDING * width, height*0.55f + y,  0.35f, ResizableImage.CENTER_RIGHT);
+		leftArrowButton = new ResizableImage(skin.getDrawable("left-arrow"), skin.getDrawable("left-arrow-down"),  x - ARROW_PADDING * width, height*0.55f + y,  height*0.7f, ResizableImage.CENTER_RIGHT);
 		leftArrowButton.setName(LEFT_ARROW_NAME); // for handling input
-		rightArrowButton = new ResizableImage(skin.getDrawable("right-arrow"), skin.getDrawable("right-arrow-down"), 0.92f, 0.8f,  0.35f, ResizableImage.TOP_LEFT);
+		rightArrowButton = new ResizableImage(skin.getDrawable("right-arrow"), skin.getDrawable("right-arrow-down"), width + x + ARROW_PADDING * width, height*0.55f + y,  height*0.7f, ResizableImage.CENTER_LEFT);
 		rightArrowButton.setName(RIGHT_ARROW_NAME); // for handling input
 		leftArrowButton.addListener(new ClickListener() {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -106,6 +102,12 @@ public class Stave extends WidgetGroup {
 	    });
 		this.addActor(leftArrowButton);
 		this.addActor(rightArrowButton);
+	}
+	public Stave(float x, float y, float height, float width, int numberOfColumns, NoteButtonHandler noteButtonHandler) {
+		this(x, y, height, width, numberOfColumns);
+		this.noteButtonHandler = noteButtonHandler;
+		/* Drag listener */
+		this.addListener(new StaveDragListener(this));
 	}
 	
 	/**
@@ -198,8 +200,8 @@ public class Stave extends WidgetGroup {
 		updateNoteWindow();
 	}
 	
-	public void addNote(int index, Note note) {
-		noteList.add(index, note);
+	public void addNote(Note note) {
+		noteList.add(note);
 		updateNoteWindow();
 	}
 	
