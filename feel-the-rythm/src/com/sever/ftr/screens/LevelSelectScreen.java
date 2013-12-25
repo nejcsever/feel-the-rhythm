@@ -189,6 +189,7 @@ public class LevelSelectScreen implements Screen {
 
 	@Override
 	public void hide() {
+		dispose();
 	}
 
 	@Override

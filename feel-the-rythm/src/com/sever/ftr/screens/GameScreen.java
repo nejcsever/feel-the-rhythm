@@ -173,21 +173,12 @@ public class GameScreen implements Screen {
 		// MIDI stuff
 		GameState gameState = game.getGameState();
 		game.playMidi(gameState.getCurrentMidiPath(), false, game.getGameState().getStorageType().equals(MidiNoteConverter.INTERNAL_STORAGE));
-		/*FileHandle dirHandle = Gdx.files.internal(FTRGame.LEVELS_DIR_PATH);
-		FileHandle[] files = dirHandle.list();
-		if (files.length != 0) {
-			currentMidiPath = dirHandle.list()[files.length - 1].toString();
-			game.playMidi(currentMidiPath, false);
-			System.out.println(currentMidiPath);
-		}*/
-		/*for (FileHandle file: dirHandle.list()) {
-		}*/
-		//game.playMidi("sounds/markoSkace.mid", false);
 	}
 
 	@Override
 	public void hide() {
 		game.stopMidi();
+		dispose();
 	}
 
 	@Override

@@ -154,6 +154,7 @@ public class ScoringScreen implements Screen {
 
 	@Override
 	public void hide() {
+		dispose();
 	}
 
 	@Override
