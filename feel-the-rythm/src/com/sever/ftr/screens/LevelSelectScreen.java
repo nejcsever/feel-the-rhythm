@@ -116,8 +116,8 @@ public class LevelSelectScreen implements Screen {
 		LabelStyle ls = new LabelStyle(titleFont, Color.BLACK);
 		LabelStyle lsPerc = new LabelStyle(smallButtonFont, Color.BLACK);
 		lsPerc.fontColor = Color.DARK_GRAY;
-		// TODO MAKE IT PRETTIER!!!
-		table.add(new Label("Level selection", ls)).pad(30);
+		// TITLE
+		table.add(new Label("Level selection", ls)).pad(Gdx.graphics.getHeight() * 0.02f);
 		TextButtonStyle tempBtnStyle = tbsWhite; // for green for 100% completed stages
 		for (FileHandle file: dirHandle.list()) {
 			levelsTable.row();
@@ -134,7 +134,7 @@ public class LevelSelectScreen implements Screen {
 			tb.pad(Gdx.graphics.getWidth()*0.02f);
 			
 			tb.add(new Label(labelText, lsPerc)).center().padTop(Gdx.graphics.getWidth()*0.01f);
-			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
+			levelsTable.add(tb).center().top().padBottom(Gdx.graphics.getHeight() * 0.02f).padTop(Gdx.graphics.getHeight() * 0.02f).width(Gdx.graphics.getWidth()*0.5f);
 			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
 		}
 		dirHandle = Gdx.files.local(FTRGame.LEVELS_DIR_PATH);
@@ -143,13 +143,13 @@ public class LevelSelectScreen implements Screen {
 			for (FileHandle file: dirHandle.list()) {
 				levelsTable.row();
 				TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()), tbsGreen);
-				levelsTable.add(tb).center().top().pad(10).height((float) Gdx.graphics.getHeight() * 0.1f).width(Gdx.graphics.getWidth()*0.5f);
+				levelsTable.add(tb).center().top().pad(Gdx.graphics.getHeight() * 0.02f).height((float) Gdx.graphics.getHeight() * 0.1f).width(Gdx.graphics.getWidth()*0.5f);
 				addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.LOCAL_STORAGE);
 			}
 		}
 		scrollPane= new ScrollPane(levelsTable);
 		table.row();
-		table.add(scrollPane).center();
+		table.add(scrollPane).center().fill();
 		table.row();
 		final TextButtonStyle tbsBack = new TextButtonStyle(null, null, null, buttonFont);
 		tbsBack.fontColor = Color.BLACK;
@@ -170,7 +170,7 @@ public class LevelSelectScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 			}
 	    });
-		table.add(backButton).pad(40).fill();
+		table.add(backButton).pad(Gdx.graphics.getHeight() * 0.05f).fill();
 		stage.addActor(table);
 	}
 
