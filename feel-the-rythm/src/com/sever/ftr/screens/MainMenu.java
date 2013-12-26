@@ -97,7 +97,7 @@ public class MainMenu implements Screen {
 			}
 	    });
 		
-		ResizableImage tutorialButton = new ResizableImage(skin.getDrawable("settings-button"), 0.12f, 0.05f, 0.25f, ResizableImage.BOTTOM_LEFT);
+		ResizableImage tutorialButton = new ResizableImage(skin.getDrawable("tutorial-button"), 0.12f, 0.05f, 0.25f, ResizableImage.BOTTOM_LEFT);
 		tutorialButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
