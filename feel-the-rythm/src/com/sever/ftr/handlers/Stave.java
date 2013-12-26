@@ -43,6 +43,7 @@ public class Stave extends WidgetGroup {
 	protected ArrayList<Note> noteList;
 	/* Contains ResizableImage's for notes that are currently visible. */
 	protected ResizableImage[] noteWindow;
+	private Image[] cLines;
 	
 	private ResizableImage leftArrowButton;
 	protected ResizableImage rightArrowButton;
@@ -66,6 +67,19 @@ public class Stave extends WidgetGroup {
 		/* Create empty note list */
 		noteList = new ArrayList<Note>();
 		
+		/* Empty cLines */
+		cLines = new Image[numberOfColumns];
+		float windowWidth = Gdx.graphics.getWidth();
+		float windowHeight = Gdx.graphics.getHeight();
+		for(int i = 0; i < cLines.length; i++) {
+			cLines[i] = new Image(skin.getDrawable("c-line"));
+			cLines[i].setHeight(windowHeight * height * rowHeightPercentage * 0.08f);
+			cLines[i].setWidth(columnWidthPercentage * windowWidth * width);
+			cLines[i].setY(windowHeight * y);
+			cLines[i].setX(windowWidth * (x + width * (i+frontPadding * 0.1f)*columnWidthPercentage));
+			cLines[i].setVisible(false);
+			this.addActor(cLines[i]);
+		}
 		/*create empty noteWindow */
 		noteWindow = new ResizableImage[numberOfColumns];
 		for(int i = 0; i < noteWindow.length; i++) {
@@ -140,6 +154,7 @@ public class Stave extends WidgetGroup {
 			
 		/* Update notes */
 		for (int i = 0; i < noteWindow.length; i++) {
+			cLines[i].setVisible(false);
 			/*If noteList is not shorter then sum of values*/
 			if (i + currentColumnPosition >= noteList.size()) {
 				noteWindow[i].setVisible(false);
@@ -152,7 +167,10 @@ public class Stave extends WidgetGroup {
 			if (currentNote == null) {
 				continue;
 			}
-			
+			/* Update cLines if note is C */
+			if (currentNote.getPitch() == 0) {
+				cLines[i].setVisible(true);
+			}
 			/* Determine which note to display */
 			if (currentNote.getType().equals(NoteButtonHandler.PAUSE)){
 				noteWindow[i].setImage(skin.getDrawable(PAUSE_DRAWABLE_STRINGS[currentNote.getLength()]));

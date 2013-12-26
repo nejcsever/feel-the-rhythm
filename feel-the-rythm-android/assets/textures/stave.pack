@@ -5,59 +5,66 @@ filter: Linear,Linear
 repeat: none
 background
   rotate: false
-  xy: 1, 373
+  xy: 1, 380
   size: 685, 635
   orig: 685, 635
   offset: 0, 0
   index: -1
 left-arrow-down
   rotate: false
-  xy: 688, 408
+  xy: 688, 415
   size: 150, 600
   orig: 150, 600
   offset: 0, 0
   index: -1
 left-arrow
   rotate: false
-  xy: 840, 408
+  xy: 840, 415
   size: 150, 600
   orig: 150, 600
   offset: 0, 0
   index: -1
 sixteenth-rest
   rotate: false
-  xy: 1, 1
+  xy: 1, 8
   size: 190, 370
   orig: 190, 370
   offset: 0, 0
   index: -1
 eighth-rest
   rotate: false
-  xy: 193, 121
+  xy: 193, 128
   size: 190, 250
   orig: 190, 250
   offset: 0, 0
   index: -1
 full-rest
   rotate: false
-  xy: 193, 59
+  xy: 193, 66
   size: 190, 60
   orig: 190, 60
   offset: 0, 0
   index: -1
 empty-stem-down
   rotate: false
-  xy: 688, 6
+  xy: 688, 13
   size: 190, 400
   orig: 190, 400
   offset: 0, 0
   index: -1
 wrong-note
   rotate: false
-  xy: 992, 998
+  xy: 992, 1005
   size: 10, 10
   split: 0, 0, 0, 0
   orig: 10, 10
+  offset: 0, 0
+  index: -1
+c-line
+  rotate: false
+  xy: 1, 1
+  size: 5, 5
+  orig: 5, 5
   offset: 0, 0
   index: -1
 
