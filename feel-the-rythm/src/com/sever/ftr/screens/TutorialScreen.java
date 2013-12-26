@@ -70,7 +70,7 @@ public class TutorialScreen implements Screen {
 	    FileHandle fontFile = Gdx.files.internal("fonts/Dosis-Light.ttf");
 	    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
 	    titleFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.1f));
-	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.05f));
+	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.04f));
 	    generator.dispose();
 		
 		/* Load background */
@@ -92,19 +92,29 @@ public class TutorialScreen implements Screen {
 		
 		// TITLE
 		LabelStyle lsTitle = new LabelStyle(titleFont, Color.BLACK);
-		Label titleLabel = new Label("Abour Feel the Rhythm", lsTitle);
-		table.add(titleLabel).top();
+		Label titleLabel = new Label("How to play:", lsTitle);
+		table.add(titleLabel).top().expand().padTop(Gdx.graphics.getHeight() * 0.05f);
 		table.row();
 		
 		// DESCRIPTION
-		LabelStyle ls = new LabelStyle(buttonFont, Color.DARK_GRAY);
-		table.add(new Label("Author: Nejc Sever", ls));
+		LabelStyle lsText = new LabelStyle(buttonFont, Color.DARK_GRAY);
+		table.add(new Label("- Main goal is to place notes on musical stave by listening to the melody.", lsText)).padTop(Gdx.graphics.getHeight() * 0.02f);
 		table.row();
-		table.add(new Label("Created: January 2014", ls));
+		table.add(new Label("- Notes and pauses are inserted by pressing/dragging on empty stave.", lsText)).padTop(Gdx.graphics.getHeight() * 0.02f);
 		table.row();
-		table.add(new Label("Nekaj", ls));
+		table.add(new Label("- Notes and pauses have different lengths and can also be deleted.", lsText)).padTop(Gdx.graphics.getHeight() * 0.02f);
 		table.row();
-		
+		table.add(new Label("- Inserted notes are played when \"Play\" button is pressed.", lsText)).padTop(Gdx.graphics.getHeight() * 0.02f);
+		table.row();
+		table.add(new Label("- \"Replay\" button repeats MIDI melody that needs to be transformed into notes.", lsText)).padTop(Gdx.graphics.getHeight() * 0.02f);
+		table.row();
+		table.add(new Label("- When you think you've correctly placed all the notes, press \"I'm done\" button", lsText)).padTop(Gdx.graphics.getHeight() * 0.02f);
+		table.row();
+		table.add(new Label("and your score will be revealed to you. Mistakes are marked with red squares.", lsText)).padTop(Gdx.graphics.getHeight() * 0.02f);
+		table.row();
+		LabelStyle ls = new LabelStyle(buttonFont, Color.BLACK);
+		table.add(new Label("Have fun!", ls)).padTop(Gdx.graphics.getHeight() * 0.05f);
+		table.row();
 		// BACKBUTTON
 		final TextButtonStyle tbsBack = new TextButtonStyle(skin.getDrawable("white-level-button"),skin.getDrawable("white-level-button-down"),skin.getDrawable("white-level-button-down"), buttonFont);
 		tbsBack.fontColor = Color.BLACK;
@@ -126,7 +136,7 @@ public class TutorialScreen implements Screen {
 				super.touchUp(event, x, y, pointer, button);
 			}
 	    });
-		table.add(backButton).padBottom(Gdx.graphics.getHeight()*0.05f).bottom();
+		table.add(backButton).padBottom(Gdx.graphics.getHeight()*0.05f).bottom().expand();
 		
 		stage.addActor(table);
 	}

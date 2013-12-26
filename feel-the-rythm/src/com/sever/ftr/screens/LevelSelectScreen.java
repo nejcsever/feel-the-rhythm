@@ -81,7 +81,7 @@ public class LevelSelectScreen implements Screen {
 	    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
 	    titleFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.1f));
 	    buttonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.05f));
-	    smallButtonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.03f));
+	    smallButtonFont = generator.generateFont(Math.round(Gdx.graphics.getHeight() * 0.04f));
 	    generator.dispose();
 		
 		/* Load background */
@@ -131,8 +131,9 @@ public class LevelSelectScreen implements Screen {
 			}
 			TextButton tb = new TextButton(MidiNoteConverter.convertFileToTitle(file.name()),tempBtnStyle);
 			tb.align(Align.left);
+			tb.pad(Gdx.graphics.getWidth()*0.02f);
 			
-			tb.add(new Label(labelText, lsPerc)).center();
+			tb.add(new Label(labelText, lsPerc)).center().padTop(Gdx.graphics.getWidth()*0.01f);
 			levelsTable.add(tb).center().top().pad(10).width(Gdx.graphics.getWidth()*0.5f);
 			addLevelButtonListener(tb, file.name(), file.path(), MidiNoteConverter.INTERNAL_STORAGE);
 		}

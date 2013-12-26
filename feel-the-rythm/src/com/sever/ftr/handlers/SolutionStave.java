@@ -48,7 +48,7 @@ public class SolutionStave extends Stave {
 			}
 			labelWindow[i].setVisible(true);
 			/* Check right and wrong notes */
-			if (currentNote.compareTo(gameState.getSolution().get(i + currentColumnPosition)) == 0) {
+			if ((i + currentColumnPosition) < gameState.getSolution().size() && currentNote.compareTo(gameState.getSolution().get(i + currentColumnPosition)) == 0) {
 				labelWindow[i].setVisible(false);
 			} else {
 				labelWindow[i].setDrawable(skin.getDrawable(WRONG_STRING));
