@@ -77,7 +77,6 @@ public class MidiNoteConverter {
 	 * Retuns list of notes which are generated from MIDI. MIDI must be compatible with game (made from the game editor).
 	 */
 	public static ArrayList<Note> generateNotesFromMidi(String filePath, String storageType) {
-		System.out.println("GENERATE NOTES FROM MIDI" + filePath);
 		ArrayList<Note> result = new ArrayList<Note>();
 		MidiFile mf;
 		try {
@@ -120,10 +119,11 @@ public class MidiNoteConverter {
 	}
 	
 	/**
-	 * Returns song name from MIDI file name. (Replace "_" with " " and remove .mid extension)
+	 * Returns song name from MIDI file name. (Replace "_" with " ", remove .mid extension and remove file number)
 	 */
 	public static String convertFileToTitle(String fileName) {
 		String result = fileName.replace(".mid", "");
+		result = result.replaceFirst("(\\d*_)", "");
 		result = result.replace("_", " ");
 		return result;
 	}

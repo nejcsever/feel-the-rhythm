@@ -140,7 +140,6 @@ public class GameScreen implements Screen {
 			public void clicked (InputEvent event, float x, float y)
 	        {
 				MidiNoteConverter.saveMidi(stave.getNoteList(), TEMP_MIDI_PATH, MidiNoteConverter.LOCAL_STORAGE);
-				System.out.println(Gdx.files.local(TEMP_MIDI_PATH).path().toString());
 				game.playMidi(Gdx.files.local(TEMP_MIDI_PATH).path().toString(), false, false);
 				super.clicked(event, x, y);
 	        }
