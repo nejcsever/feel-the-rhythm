@@ -125,11 +125,9 @@ public class AboutScreen implements Screen {
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				game.getClick().play(game.clickVolume);
-				tbsBack.fontColor = Color.GRAY;
 				return super.touchDown(event, x, y, pointer, button);
 			}
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				tbsBack.fontColor = Color.BLACK;
 				super.touchUp(event, x, y, pointer, button);
 			}
 	    });
