@@ -115,7 +115,7 @@ public class ScoringScreen implements Screen {
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				game.getClick().play();
+				game.getClick().play(game.clickVolume);
 				tbsBack.fontColor = Color.GRAY;
 				return super.touchDown(event, x, y, pointer, button);
 			}

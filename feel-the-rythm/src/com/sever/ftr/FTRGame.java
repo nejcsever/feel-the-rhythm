@@ -40,6 +40,7 @@ public class FTRGame extends Game {
 	
 	private Music backgroundMusic;
 	private Sound click;
+	public float clickVolume = 0.3f;
 	
 	public FTRGame(MidiPlayer midiPlayer) {
 		this.midiPlayer = midiPlayer;

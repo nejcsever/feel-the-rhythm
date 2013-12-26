@@ -88,7 +88,7 @@ public class MainMenu implements Screen {
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				playButton.drawImageDown();
-				game.getClick().play();
+				game.getClick().play(game.clickVolume);
 				return super.touchDown(event, x, y, pointer, button);
 			}
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -105,7 +105,7 @@ public class MainMenu implements Screen {
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				game.getClick().play();
+				game.getClick().play(game.clickVolume);
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });
@@ -118,7 +118,7 @@ public class MainMenu implements Screen {
 				super.clicked(event, x, y);
 	        }
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				game.getClick().play();
+				game.getClick().play(game.clickVolume);
 				return super.touchDown(event, x, y, pointer, button);
 			}
 	    });

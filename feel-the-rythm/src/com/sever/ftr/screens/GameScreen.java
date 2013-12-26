@@ -117,7 +117,7 @@ public class GameScreen implements Screen {
 		doneButton.addListener(new ClickListener() {
 			public void clicked (InputEvent event, float x, float y)
 	        {
-				game.getClick().play();
+				game.getClick().play(game.clickVolume);
 				game.getGameState().setUsersSolution(stave.getNoteList());
 				game.switchScreen(FTRGame.SCORING_SCREEN);
 				super.clicked(event, x, y);
