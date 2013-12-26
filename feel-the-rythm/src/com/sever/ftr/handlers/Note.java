@@ -48,10 +48,14 @@ public class Note implements Comparable<Note> {
 
 	@Override
 	public int compareTo(Note note) {
+		/* Check pauses */
 		if (this.length < note.length) {
 			return -1;
 		} else if (this.length > note.length) {
 			return 1;
+		}
+		if ((this.type.equals(NoteButtonHandler.PAUSE) || note.type.equals(NoteButtonHandler.PAUSE)) && this.type.equals(note.type)) {
+			return 0;
 		}
 		if (this.pitch < note.pitch) {
 			return -1;

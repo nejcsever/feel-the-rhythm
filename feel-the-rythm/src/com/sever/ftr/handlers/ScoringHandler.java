@@ -23,7 +23,7 @@ public class ScoringHandler {
 		} else if (usersSolSize < solSize) {
 			int sub = solSize - usersSolSize;
 			double temp = (double) sub / (double) solSize;
-			result -= result * temp; // subtract if users solution is too long
+			result -= result * temp; // subtract if users solution is too short
 		}
 		
 		double errorPerc = 1 / (double) solSize; //error per note missed

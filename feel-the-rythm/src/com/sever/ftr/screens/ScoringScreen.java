@@ -135,9 +135,12 @@ public class ScoringScreen implements Screen {
 		}
 		table.add(new Label(score + "%", lsScore));
 		if (!isNewHighscore) {
-			LabelStyle phs = new LabelStyle(smallFont, Color.DARK_GRAY);
-			table.row();
-			table.add(new Label("Hi-Score: " + HighScore.readHighScore(game.getGameState().getCurrentMidiPath()) + "%", phs)).pad(Gdx.graphics.getHeight()*0.01f);
+			int currentHighScore = HighScore.readHighScore(game.getGameState().getCurrentMidiPath());
+			if (currentHighScore != -1) {
+				LabelStyle phs = new LabelStyle(smallFont, Color.DARK_GRAY);
+				table.row();
+				table.add(new Label("Hi-Score: " + currentHighScore + "%", phs)).pad(Gdx.graphics.getHeight()*0.01f);
+			}
 		}
 		table.row();
 		table.add(backButton).padBottom(Gdx.graphics.getHeight()*0.05f).bottom();

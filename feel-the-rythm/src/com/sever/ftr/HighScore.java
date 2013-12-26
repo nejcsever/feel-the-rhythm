@@ -60,11 +60,11 @@ public class HighScore {
 		}
 		boolean changed = false;
 		if (highscoreObject.getLevels().containsKey(levelName)) {
-			if (highscoreObject.getLevels().get(levelName) < newScore) {
+			if (highscoreObject.getLevels().get(levelName) < newScore && newScore > 0) {
 				highscoreObject.getLevels().put(levelName, newScore);
 				changed = true;
     		}
-		} else {
+		} else if (newScore > 0){
 			highscoreObject.getLevels().put(levelName, newScore);
 			changed = true;
 		}

@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.sever.ftr.FTRGame;
 import com.sever.ftr.GameState;
 import com.sever.ftr.handlers.MidiNoteConverter;
+import com.sever.ftr.handlers.Note;
 import com.sever.ftr.handlers.NoteButtonHandler;
 import com.sever.ftr.handlers.ResizableImage;
 import com.sever.ftr.handlers.Stave;
@@ -156,7 +157,9 @@ public class GameScreen implements Screen {
 		
 		/* Stave */
 		stave = new Stave(0.25f, 0.35f, 0.50f, 0.65f, 6, noteButtonHandler);
-		stave.addNote(game.getGameState().getSolution().get(0)); // set first note of solution
+		Note firstSolNote = game.getGameState().getSolution().get(0);
+		Note firstNote = new Note(firstSolNote.getLength(), firstSolNote.getPitch(), firstSolNote.getType()); // must copy, so it's not the same instance
+		stave.addNote(firstNote); // set first note of solution
 		stage.addActor(stave);
 		stage.addActor(noteButtonHandler);
 		
