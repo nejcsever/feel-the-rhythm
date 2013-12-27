@@ -168,7 +168,7 @@ public class Stave extends WidgetGroup {
 				continue;
 			}
 			/* Update cLines if note is C */
-			if (currentNote.getPitch() == 0) {
+			if (currentNote.getPitch() == 0 && !currentNote.getType().equals(NoteButtonHandler.PAUSE)) {
 				cLines[i].setVisible(true);
 			}
 			/* Determine which note to display */
